@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CODE — Шифр Цезаря</title>
+  <meta name="description" content="Завдання з шифру Цезаря" />
+  <link rel="icon" href="../public/favicon.ico" type="image/x-icon">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  
+  <style>
+    .cipher-alphabet {
+      margin: 30px auto;
+      padding: 32px;
+      background: #fff;
+      width: fit-content;
+      max-width: 100%;
+    }
+    
+.cipher-alphabet,
+.example-box,
+.cipher-input-group {               /* карточка с примером и таблица */
+  margin: 30px 0;                   /* раньше было auto -> центр */
+}
+
+
+.cipher-game .hex-input {           /* уберём инлайн margin:0 auto */
+  margin: 0 !important;
+}
+
+/* Добавляем стили для подсветки в Квадрате Полибия */
+.polybius-square td:hover,
+.polybius-square th:hover,
+.polybius-square td.highlighted,
+.polybius-square th.highlighted {
+    background: #D2F801; /* Желто-зеленый цвет для подсветки */
+    color: #0A142F;
+    cursor: pointer;
+}
+
+.header__btn--outline {
+    background: transparent;
+    color: #383838;
+    border: 2px solid #383838;
+    }
+
+.header__btn--outline:hover {
+    background: #383838;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(56, 56, 56, 0.3);
+}
+
+/* Подсветка для цифр-заголовков, когда наводимся на них */
+.polybius-square th.highlighted {
+    background: #D2F801;
+}
+
+/* Добавляем стили для подсвечивания ячеек, связанных с числовым кодом */
+.polybius-square td[data-row].active-row,
+.polybius-square td[data-col].active-col {
+    background: #E3EEFF;
+}
+
+/* Ячейка с буквой, которую мы ищем */
+.polybius-square td.active-cell {
+    background: #E3EEFF;
+    color: #000;
+    font-weight: 700;
+}
+
+    .quiz__nav{ display:flex; justify-content:flex-start; margin-top:28px; gap: 20px; }
+
+/* Додаємо шрифт Gilroy, якщо він ще не підключений, але оскільки ви його згадали, 
+       припустимо, що він підключений у загальному файлі стилів або через @font-face. 
+       Для надійності я використовую 'Inter' як запасний. */
+    .polybius-square {
+
+        padding: 0; /* Прибираємо внутрішні відступи, щоб таблиця була компактнішою */
+        background: #fff;
+        width: fit-content;
+        max-width: 100%;
+        border-collapse: collapse; /* Важливо для таблиці */
+        border: none;
+    }
+
+    .polybius-square th,
+    .polybius-square td {
+        width: 48px;
+        height: 48px;
+        text-align: center;
+        vertical-align: middle;
+        font-family: 'Gilroy', 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 18px; /* Згідно з вашим запитом */
+        border: 2px solid #0267FB; /* Колір та товщина бордера */
+        color: #0267FB; /* Колір тексту для літер */
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Стилі для заголовків рядків та стовпців */
+    .polybius-square th {
+        background: #0267FB;
+        color: #fff;
+        font-weight: 700;
+        font-size: 20px;
+    }
+    
+    /* Додатково: Об'єднання клітинок для літер Г/Ґ та І/Ї */
+    .polybius-square td.merged-cell {
+        font-size: 16px; /* Трохи менший розмір, щоб помістилися дві літери */
+        padding: 2px;
+    }
+
+    .alphabet-row {
+      display: flex;
+      justify-content: flex-start;
+      gap: 8px;
+      margin: 10px 0;
+      flex-wrap: nowrap;
+    }
+
+    .alphabet-row,
+    .arrow-row,
+    .encrypted-text,
+    .answer-inputs {
+      justify-content: flex-start !important;  /* все ряды тянем к левому краю */
+    }
+        
+    .alphabet-cell {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: #0267FB;
+      font-weight: 600;
+      border: 2px solid #0267FB;
+      border-radius: 8px;
+      font-size: 20px;
+      font-family: 'Gilroy', 'Inter', sans-serif;
+    }
+    
+    .alphabet-cell--header {
+      background: #0267FB;
+      color: #fff;
+      font-weight: 700;
+    }
+    
+    .arrow-row {
+      display: flex;
+      justify-content: flex-start;
+      gap: 8px;
+      margin: 5px 0;
+      flex-wrap: nowrap;
+    }
+    
+    .arrow-cell {
+      width: 48px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0267FB;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .example-box {
+      background: #fff;
+    }
+    
+    .example-text {
+      color: #0A142F;
+      font-size: 24px;
+      margin: 10px 0;
+      font-family: 'Gilroy', 'Inter', sans-serif;
+      font-weight: 500;
+    }
+    
+    .example-label {
+      color: #0267FB;
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 10px;
+      font-family: 'Gilroy', 'Inter', sans-serif;
+    }
+    
+    .cipher-game {
+      margin: 30px 0;
+      display: flex;
+      justify-content: flex-start;
+    }
+    
+    .hex-input {
+      display: inline-flex;
+      flex-direction: column;
+      border: 3px solid #0267FB;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+      width: fit-content;
+    }
+
+    .hex-input__codes {
+      display: flex;
+      gap: 22px;
+      background: #fff;
+      padding: 16px 20px;
+    }
+
+    .hex-input__code {
+      width: 60px;
+      text-align: center;
+      font-family: 'Gilroy', 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 32px;
+      color: #0267FB;
+      user-select: none;
+    }
+
+    .hex-input__fields {
+      display: flex;
+      gap: 22px;
+      background: #0267FB;
+      padding: 20px;
+    }
+
+    .hex-input__field {
+      width: 60px;
+      height: 60px;
+      background: #0267FB;
+      border: none;
+      border-bottom: 3px solid #fff;
+      text-align: center;
+      font-family: 'Gilroy', 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 32px;
+      color: #fff;
+      outline: none;
+      text-transform: uppercase;
+      transition: border-color 0.2s ease;
+    }
+
+    .hex-input__field:focus {
+      border-bottom-color: #D2F801;
+    }
+
+    .hex-input__field.incorrect {
+      border-bottom-color: #ff4444;
+    }
+    
+    .cipher-input-group {
+      background: #fff;
+      border: 3px solid #0267FB;
+      padding: 32px;
+      border-radius: 16px;
+      margin: 20px auto;
+      width: fit-content;
+      max-width: 100%;
+    }
+    
+    .encrypted-text {
+      display: flex;
+      gap: 22px;
+      justify-content: flex-start;
+      margin: 20px 0;
+      flex-wrap: nowrap;
+      background: #fff;
+      padding: 20px;
+    }
+    
+    .letter-box {
+      width: 60px;
+      height: 60px;
+      background: #fff;
+      color: #0267FB;
+      border: 3px solid #0267FB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 28px;
+      border-radius: 8px;
+      font-family: 'Gilroy', 'Inter', sans-serif;
+    }
+    
+    .answer-inputs {
+      display: flex;
+      gap: 22px;
+      justify-content: flex-start;
+      margin: 20px auto;
+      flex-wrap: nowrap;
+      background: #0267FB;
+      padding: 20px;
+      border-radius: 0 0 16px 16px;
+      width: fit-content;
+      max-width: 100%;
+    }
+    
+    .answer-input {
+      width: 60px;
+      height: 60px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      text-transform: uppercase;
+      border: none;
+      border-bottom: 3px solid #fff;
+      border-radius: 0;
+      background: #0267FB;
+      color: #fff;
+      font-family: 'Gilroy', 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    
+    .answer-input:focus {
+      border-bottom-color: #D2F801;
+    }
+    
+    .answer-input.incorrect {
+      border-bottom-color: #ff4444;
+    }
+    
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Gilroy', 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 46px;
+    }
+    
+    .btn--primary {
+      background: #0267FB;
+      color: white;
+    }
+    
+    .btn--primary:hover {
+      background: #0056d6;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(2,103,251,.3);
+    }
+    
+    .btn--secondary {
+      background: #ff4444;
+      color: white;
+    }
+    
+    .btn--secondary:hover {
+      background: #cc0000;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255,68,68,.3);
+    }
+    
+    .result-message {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+      font-size: 18px;
+    }
+    
+    .result-message--success {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .result-message--error {
+      background: #ff4444;
+      color: white;
+    }
+    
+    .shift-info {
+      background: #0267FB;
+      padding: 24px 48px;
+      border-radius: 16px;
+      text-align: center;
+      margin: 20px auto;
+      width: fit-content;
+    }
+    
+    .shift-number {
+      color: #fff;
+      font-size: 48px;
+      font-weight: 700;
+      font-family: 'Unbounded', 'Inter', sans-serif;
+    }
+    
+    .shift-label {
+      color: #fff;
+      font-size: 20px;
+      margin-top: 5px;
+      font-family: 'Gilroy', 'Inter', sans-serif;
+    }
+
+    .highlight {
+      fill: #E3EEFF !important; /* для букв */
+      stroke: #0267FB;   /* для стрелки */
+    }
+    .letter-box {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="page--registration">
+  <!-- Header -->
+  <header class="header masthead">
+    <div class="container">
+      <div class="header__shell">
+        <div class="header__inner"> 
+          <a class="header__logo" href="index.html">
+            <img src="assets/img/logo.svg" alt="CODE Logo">
+          </a>
+
+          <nav class="header__nav" aria-label="Головна навігація">
+            <ul class="header__menu">
+              <li class="header__item"><a class="header__link" href="index.html">Головна</a></li>
+              <li class="header__item"><a class="header__link header__link--active" href="quiz.html">Почати</a></li>
+              <li class="header__item"><a class="header__link" href="about.html">Про тест</a></li>
+            </ul>
+          </nav>
+
+          <div class="header__actions" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div class="hero hero--registration">
+        <div class="hero__inner grid-reg">
+          <section class="reg-card" aria-labelledby="student-title">
+            <h1 class="reg-card__title" id="student-title"></h1>
+            <p class="reg-card__lead">Клас: <span id="student-class"></span></p>
+            <button id="changeBtn" class="reg-submit" type="button">Змінити</button>
+          </section>
+
+          <div class="reg-visual" aria-hidden="true">
+            <img src="assets/img/registration-hero.png" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Task 3 Section -->
+  <section class="task1">
+    <div class="container">
+      <!-- Progress bar -->
+      <div class="task1__progress">
+        <div class="progress-bar">
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--active"></div>
+        </div>
+      </div>
+
+      <!-- Question card -->
+      <div class="task1__card">
+        <h1 class="task1__title">Шифр Цезаря</h1>
+        
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Мета</h2>
+          <p class="task1__text">Навчитися розшифровувати текст, закодований шифром Цезаря <span class="task1__highlight">зі зсувом 3.</span></p>
+        </div>
+
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Завдання</h2>
+          <p class="task1__text">Дано зашифроване слово за допомогою шифру Цезаря <span class="task1__highlight">зі зсувом 3</span> позиції вперед по алфавіту.</p>
+        </div>
+
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Приклад</h2>
+          <div class="example-box">
+            <div class="example-label">Зсув на 3 позиції:</div>
+            <div class="example-text">А → Г (зсув на 3)</div>
+            <div class="example-text">Б → Д (зсув на 3)</div>
+            <div class="example-text">В → Е (зсув на 3)</div>
+            <div style="margin-top: 20px;">
+              <div class="example-label">Приклад шифрування:</div>
+              <div class="example-text" style="color: #0267FB; font-weight: 700;">КОМП'ЮТЕР → НРПСЬЮФДО</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Квадрат Полібія</h2>
+
+          <table class="polybius-square">
+              <thead>
+                  <tr>
+                      <th></th> <th>1</th>
+                      <th>2</th>
+                      <th>3</th>
+                      <th>4</th>
+                      <th>5</th>
+                      <th>6</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <th>1</th>
+                      <td>А</td>
+                      <td>Б</td>
+                      <td>В</td>
+                      <td class="merged-cell">Г/Ґ</td>
+                      <td>Д</td>
+                      <td>Е</td>
+                  </tr>
+                  <tr>
+                      <th>2</th>
+                      <td>Є</td>
+                      <td>Ж</td>
+                      <td>З</td>
+                      <td class="merged-cell">И/І</td>
+                      <td class="merged-cell">Ї/Й</td>
+                      <td>К</td>
+                  </tr>
+                  <tr>
+                      <th>3</th>
+                      <td>Л</td>
+                      <td>М</td>
+                      <td>Н</td>
+                      <td>О</td>
+                      <td>П</td>
+                      <td>Р</td>
+                  </tr>
+                  <tr>
+                      <th>4</th>
+                      <td>С</td>
+                      <td>Т</td>
+                      <td>У</td>
+                      <td>Ф</td>
+                      <td>Х</td>
+                      <td>Ц</td>
+                  </tr>
+                  <tr>
+                      <th>5</th>
+                      <td>Ч</td>
+                      <td>Ш</td>
+                      <td>Щ</td>
+                      <td>Ь</td>
+                      <td>Ю</td>
+                      <td>Я</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Гра: Розшифруй послання</h2>
+          <div class="cipher-game">
+            <div class="hex-input" style="margin: 0 auto;">
+              <div class="hex-input__codes">
+                <span class="hex-input__code">52</span>
+                <span class="hex-input__code">26</span>
+                <span class="hex-input__code">34</span>
+                <span class="hex-input__code">31</span>
+                <span class="hex-input__code">11</span>
+              </div>
+              <div class="hex-input__fields">
+                <input type="text" class="hex-input__field" maxlength="1" data-answer="Ш">
+                <input type="text" class="hex-input__field" maxlength="1" data-answer="К">
+                <input type="text" class="hex-input__field" maxlength="1" data-answer="О">
+                <input type="text" class="hex-input__field" maxlength="1" data-answer="Л">
+                <input type="text" class="hex-input__field" maxlength="1" data-answer="А">
+
+              </div>
+            </div>
+          </div>
+
+          <div class="result-message" id="resultMessage"></div>
+        </div>
+
+        <div class="quiz__nav">
+          <a class="header__btn-link" href="quiz4.html" role="button">
+            <button type="button" class="header__btn header__btn--outline">Назад</button>
+          </a>
+
+          <a class="header__btn-link" href="Finish.html" role="button">
+            <button type="button" class="header__btn">Завершити</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" aria-label="Підвал сайту">
+    <div class="container footer__wrap">
+      <h2 class="footer__title">Знання. Навички. Майбутнє.</h2>
+      <p class="footer__lead">
+        Пройди тест і отримай нові цифрові навички у простій ігровій формі. Твій перший крок до майбутнього вже тут — почни зараз і наприкінці отримай свій іменний PDF-сертифікат.
+      </p>
+      <hr class="footer__rule" />
+      <div class="footer__bottom">
+        <img class="footer__logo" src="assets/img/black-logo.svg" alt="Code Quest" />
+        <p class="footer__copy">© 2025 Code Quest. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const STORAGE_KEY = 'cq_quiz5_state';
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { inputs: [] };
+        const parsed = JSON.parse(raw);
+        return {
+          inputs: Array.isArray(parsed.inputs) ? parsed.inputs : []
+        };
+      } catch {
+        return { inputs: [] };
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    let state = loadState();
+
+    // -----------------------------------------------------------------
+    //  ЗАГРУЗКА ДАННЫХ УЧНЯ
+    // -----------------------------------------------------------------
+    const saved = localStorage.getItem('cq_registration');
+    let data = null;
+    try {
+      data = saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      data = null;
+    }
+
+    if (!data || !data.name || !data.klass) {
+      window.location.href = 'registration.html';
+      return;
+    }
+
+    const studentTitle = document.getElementById('student-title');
+    const studentClass = document.getElementById('student-class');
+
+    if (studentTitle) studentTitle.textContent = data.name;
+    if (studentClass) studentClass.textContent = data.klass;
+
+    const changeBtn = document.getElementById('changeBtn');
+    if (changeBtn) {
+      changeBtn.addEventListener('click', () => {
+        window.location.href = 'registration.html#edit';
+      });
+    }
+
+    // -----------------------------------------------------------------
+    //  КВАДРАТ ПОЛІБІЯ: ПОДСВЕТКА КООРДИНАТ ПРИ НАВЕДЕНИИ НА БУКВУ
+    // -----------------------------------------------------------------
+    const polybiusTable = document.querySelector('.polybius-square');
+
+    if (polybiusTable) {
+      const letterCells = polybiusTable.querySelectorAll('tbody td');
+
+      const clearPolybiusHighlights = () => {
+        polybiusTable
+          .querySelectorAll('.active-cell, .highlighted')
+          .forEach(cell => cell.classList.remove('active-cell', 'highlighted'));
+      };
+
+      letterCells.forEach(cell => {
+        cell.style.cursor = 'pointer';
+
+        cell.addEventListener('mouseenter', () => {
+          clearPolybiusHighlights();
+
+          const row = cell.parentElement;               // <tr>
+          const rowHeader = row ? row.querySelector('th') : null; // цифра строки
+
+          const colIndex = cell.cellIndex;              // индекс в строке
+          const headerRow = polybiusTable.tHead ? polybiusTable.tHead.rows[0] : null;
+          const colHeader = headerRow ? headerRow.cells[colIndex] : null; // цифра столбца
+
+          cell.classList.add('active-cell');
+          if (rowHeader) rowHeader.classList.add('highlighted');
+          if (colHeader) colHeader.classList.add('highlighted');
+        });
+
+        cell.addEventListener('mouseleave', () => {
+          clearPolybiusHighlights();
+        });
+      });
+    }
+
+    // -----------------------------------------------------------------
+    //  ГРА «РОЗШИФРУЙ ПОСЛАННЯ»: МГНОВЕННАЯ ПРОВЕРКА + СОХРАНЕНИЕ
+    // -----------------------------------------------------------------
+    const hexFields = document.querySelectorAll('.hex-input__field');
+
+    // Підготувати масив під кількість полів
+    if (!Array.isArray(state.inputs)) {
+      state.inputs = [];
+    }
+    if (hexFields.length && state.inputs.length < hexFields.length) {
+      for (let i = state.inputs.length; i < hexFields.length; i++) {
+        state.inputs.push('');
+      }
+    }
+
+    function validateField(input, index, shouldSave) {
+      let val = input.value;
+
+      // 1. один символ, верхній регістр
+      if (val.length > 1) {
+        val = val.slice(-1);
+      }
+      val = val.toUpperCase();
+      input.value = val;
+
+      const userAnswer = val.trim();
+      const correctAnswer = (input.dataset.answer || '').toUpperCase();
+
+      // 2. сброс классов
+      input.classList.remove('correct', 'incorrect');
+
+      // 3. подсветка
+      if (userAnswer === '') {
+        // пусто — без подсветки
+      } else if (userAnswer === correctAnswer) {
+        input.classList.add('correct');
+      } else {
+        input.classList.add('incorrect');
+      }
+
+      // 4. сохранение в state / localStorage
+      if (shouldSave) {
+        state.inputs[index] = userAnswer;
+        saveState();
+      }
+    }
+
+    // Восстановление значений из localStorage
+    if (hexFields.length) {
+      hexFields.forEach((input, index) => {
+        const savedChar = state.inputs[index];
+        if (savedChar) {
+          input.value = savedChar;
+          validateField(input, index, false); // восстановить и подсветить, но не перезаписывать
+        }
+      });
+
+      // Навешиваем обработчики
+      hexFields.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+          validateField(input, index, true);
+
+          // авто-переход к следующему полю
+          if (input.value.length === 1 && index < hexFields.length - 1) {
+            const next = hexFields[index + 1];
+            if (next && !next.disabled) {
+              next.focus();
+            }
+          }
+        });
+
+        // навигация по Backspace
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            const prev = hexFields[index - 1];
+            if (prev && !prev.disabled) {
+              prev.focus();
+            }
+          }
+        });
+      });
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

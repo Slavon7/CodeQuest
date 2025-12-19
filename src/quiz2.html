@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CODE — Кодування зображень</title>
+  <meta name="description" content="Завдання з кодування зображень" />
+  <link rel="icon" href="../public/favicon.ico" type="image/x-icon">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  
+  <style>
+    .task1__game-area {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 60px;
+      align-items: start;
+      margin: 30px 0;
+    }
+    
+    .game-left {
+      flex-shrink: 0;
+    }
+    
+    .game-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .game-col-numbers {
+      display: grid;
+      grid-template-columns: 40px repeat(16, 30px);
+      gap: 1px;
+      margin-bottom: 5px;
+    }
+    
+    .game-corner {
+      width: 40px;
+    }
+    
+    .game-col-label {
+      width: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #999;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+    }
+    
+    .game-grid-row {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .game-row-numbers {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      padding-right: 5px;
+    }
+    
+    .game-row-label {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 12px;
+      color: #999;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      padding-right: 5px;
+    }
+    
+    .pixel-grid-wrapper {
+      display: grid;
+      grid-template-columns: repeat(16, 30px);
+      gap: 1px;
+      background: #D9D9D9;
+      padding: 1px;
+    }
+    
+    .pixel-grid {
+      display: contents;
+    }
+    
+    .cipher-list {
+      flex: 1;
+    }
+    
+    .cipher-list h3 {
+      color: #0A142F;
+      font-size: 18px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    
+    .cipher-codes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      color: #0A142F;
+      font-weight: 400;
+    }
+    
+    .cipher-code {
+      padding: 4px;
+    }
+    
+    .pixel-cell {
+      width: 30px;
+      height: 30px;
+      background: white;
+      cursor: pointer;
+      transition: transform 0.1s;
+      box-sizing: border-box;
+    }
+    
+    .pixel-cell:hover {
+      transform: scale(1.05);
+      z-index: 10;
+    }
+    
+    .color-palette {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    
+    .color-option {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+    
+    .color-option.selected {
+      border-color: #FFD700;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+    
+    .color-label {
+      text-align: center;
+      margin-top: 5px;
+      font-size: 12px;
+      color: white;
+    }
+    
+    .color-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .quiz__nav{ display:flex; justify-content:flex-start; margin-top:28px; gap: 20px; }
+
+    .header__btn--outline {
+      background: transparent;
+      color: #383838;
+      border: 2px solid #383838;
+    }
+
+    .header__btn--outline:hover {
+      background: #383838;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(56, 56, 56, 0.3);
+    }
+
+    .task-controls {
+      display: flex;
+      gap: 15px;
+      justify-content: flex-start;
+      margin: 20px 0;
+    }
+    
+    .control-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .control-btn--clear {
+      background: #ff4444;
+      color: white;
+    }
+    
+    .control-btn--clear:hover {
+      background: #cc0000;
+    }
+    
+    .control-btn--check {
+      background: #0267FB;
+      color: white;
+    }
+    
+    .control-btn--check:hover {
+      background: #0267FB;
+    }
+    
+    .result-message {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+    }
+    
+    .result-message--success {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .result-message--error {
+      background: #ff4444;
+      color: white;
+    }
+    
+    /* Example section styles */
+    .example-container {
+      display: flex;
+      gap: 60px;
+      align-items: flex-start;
+      margin: 30px 0;
+    }
+    
+    .example-left {
+      flex-shrink: 0;
+    }
+    
+    .example-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .example-col-numbers {
+      display: grid;
+      grid-template-columns: 40px repeat(16, 28px);
+      gap: 1px;
+      margin-bottom: 5px;
+    }
+    
+    .example-corner {
+      width: 40px;
+    }
+    
+    .example-col-label {
+      width: 28px;
+      text-align: center;
+      font-size: 12px;
+      color: #999;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+    }
+    
+    .example-grid-row {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .example-row-numbers {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      padding-right: 5px;
+    }
+    
+    .example-row-label {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 12px;
+      color: #999;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      padding-right: 5px;
+    }
+    
+    .example-grid-with-coords {
+      display: grid;
+      grid-template-columns: repeat(16, 28px);
+      gap: 1px;
+      background: #D9D9D9;
+      padding: 1px;
+    }
+    
+    .example-cell {
+      width: 28px;
+      height: 28px;
+      background: white;
+      box-sizing: border-box;
+    }
+    
+    .example-cipher {
+      flex: 1;
+    }
+    
+    .example-cipher h3 {
+      color: #0A142F;
+      font-size: 18px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    
+    .example-cipher-codes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: #0A142F;
+      font-weight: 400;
+    }
+    
+    .task1__highlight {
+      color: #FFD700;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="page--registration">
+  <!-- Header -->
+  <header class="header masthead">
+    <div class="container">
+      <div class="header__shell">
+        <div class="header__inner"> 
+          <a class="header__logo" href="index.html">
+            <img src="assets/img/logo.svg" alt="CODE Logo">
+          </a>
+
+          <nav class="header__nav" aria-label="Головна навігація">
+            <ul class="header__menu">
+              <li class="header__item"><a class="header__link" href="index.html">Головна</a></li>
+              <li class="header__item"><a class="header__link header__link--active" href="quiz.html">Почати</a></li>
+              <li class="header__item"><a class="header__link" href="about.html">Про тест</a></li>
+            </ul>
+          </nav>
+
+          <div class="header__actions" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div class="hero hero--registration">
+        <div class="hero__inner grid-reg">
+          <section class="reg-card" aria-labelledby="student-title">
+            <h1 class="reg-card__title" id="student-title"></h1>
+            <p class="reg-card__lead">Клас: <span id="student-class"></span></p>
+            <button id="changeBtn" class="reg-submit" type="button">Змінити</button>
+          </section>
+
+          <div class="reg-visual" aria-hidden="true">
+            <img src="assets/img/registration-hero.png" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Task 2 Section -->
+  <section class="task1">
+    <div class="container">
+      <!-- Progress bar -->
+      <div class="task1__progress">
+        <div class="progress-bar">
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--active"></div>
+          <div class="progress-bar__step"></div>
+          <div class="progress-bar__step"></div>
+          <div class="progress-bar__step"></div>
+        </div>
+      </div>
+
+      <!-- Question card -->
+      <div class="task1__card">
+        <h1 class="task1__title">Кодування зображень</h1>
+        
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Мета</h2>
+          <p class="task1__text">Навчитися кодувати та відтворювати зображення за допомогою матриці та кольорового кодування.</p>
+        </div>
+
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Завдання</h2>
+          <p class="task1__text">Дано матрицю розміром <span class="task1__highlight">16×16 клітинок.</span></p>
+          <ul style="color: #0A142F; margin-left: 20px; line-height: 1.8;">
+            <li><strong>1 рівень</strong> — монохромне зображення (чорний/білий).</li>
+            <li><strong>2 рівень</strong> — два кольори (наприклад, синій і жовтий, як прапор).</li>
+            <li><strong>4 рівень</strong> — чотири кольори для складніших малюнків.</li>
+          </ul>
+          <p class="task1__text" style="margin-top: 15px;">Зображення зашифроване у форматі: <span class="task1__highlight">x,y,COLOR</span></p>
+          <p class="task1__text" style="font-style: italic; font-size: 24px;">де x — номер стовпця, y — номер рядка, COLOR — колір клітинки.</p>
+        </div>
+
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Приклад</h2>
+          <div class="example-container">
+            <!-- Left: Grid with coordinates -->
+            <div class="example-left">
+              <div class="example-wrapper">
+                <!-- Column numbers (top) -->
+                <div class="example-col-numbers">
+                  <div class="example-corner"></div>
+                  <div class="example-col-label">01</div>
+                  <div class="example-col-label">02</div>
+                  <div class="example-col-label">03</div>
+                  <div class="example-col-label">04</div>
+                  <div class="example-col-label">05</div>
+                  <div class="example-col-label">06</div>
+                  <div class="example-col-label">07</div>
+                  <div class="example-col-label">08</div>
+                  <div class="example-col-label">09</div>
+                  <div class="example-col-label">10</div>
+                  <div class="example-col-label">11</div>
+                  <div class="example-col-label">12</div>
+                  <div class="example-col-label">13</div>
+                  <div class="example-col-label">14</div>
+                  <div class="example-col-label">15</div>
+                  <div class="example-col-label">16</div>
+                </div>
+                
+                <!-- Grid with row numbers -->
+                <div class="example-grid-row">
+                  <!-- Row numbers (left) -->
+                  <div class="example-row-numbers">
+                    <div class="example-row-label">01</div>
+                    <div class="example-row-label">02</div>
+                    <div class="example-row-label">03</div>
+                    <div class="example-row-label">04</div>
+                    <div class="example-row-label">05</div>
+                    <div class="example-row-label">06</div>
+                    <div class="example-row-label">07</div>
+                    <div class="example-row-label">08</div>
+                    <div class="example-row-label">09</div>
+                    <div class="example-row-label">10</div>
+                    <div class="example-row-label">11</div>
+                    <div class="example-row-label">12</div>
+                    <div class="example-row-label">13</div>
+                    <div class="example-row-label">14</div>
+                    <div class="example-row-label">15</div>
+                    <div class="example-row-label">16</div>
+                  </div>
+                  
+                  <!-- Grid -->
+                  <div class="example-grid-with-coords" id="exampleGrid"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Cipher list -->
+            <div class="example-cipher">
+              <h3>Шифр:</h3>
+              <div class="example-cipher-codes">
+                <div>1. 03,01,RED</div>
+                <div>2. 04,01,RED</div>
+                <div>3. 11,01,RED</div>
+                <div>4. 12,01,RED</div>
+                <div>5. 02,02,RED</div>
+                <div>6. 05,02,RED</div>
+                <div>7. 10,02,RED</div>
+                <div>8. 13,02,RED</div>
+                <div>9. 01,03,RED</div>
+                <div>10. 06,03,RED</div>
+                <div>11. 09,03,RED</div>
+                <div>12. 14,03,RED</div>
+                <div>13. 01,04,RED</div>
+                <div>14. 14,04,RED</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Гра: розфарбуй малюнок за шифром</h2>
+          <p class="task1__text">Використовуй шифр справа, щоб відтворити зображення</p>
+          
+          <div class="task1__game-area">
+            <!-- Left: Grid with coordinates and controls -->
+            <div class="game-left">
+              <div class="game-wrapper">
+                <!-- Color Palette -->
+                <div class="color-palette">
+                  <div class="color-item">
+                    <div class="color-option selected" data-color="#FF0000" style="background: #FF0000;"></div>
+                    <div class="color-label">RED</div>
+                  </div>
+                  <div class="color-item">
+                    <div class="color-option" data-color="#000000" style="background: #000000;"></div>
+                    <div class="color-label">BLACK</div>
+                  </div>
+                  <div class="color-item">
+                    <div class="color-option" data-color="#0066FF" style="background: #0066FF;"></div>
+                    <div class="color-label">BLUE</div>
+                  </div>
+                  <div class="color-item">
+                    <div class="color-option" data-color="#FFFF00" style="background: #FFFF00;"></div>
+                    <div class="color-label">YELLOW</div>
+                  </div>
+                  <div class="color-item">
+                    <div class="color-option" data-color="#FFFFFF" style="background: #FFFFFF; border: 2px solid #666;"></div>
+                    <div class="color-label">WHITE</div>
+                  </div>
+                </div>
+
+                <!-- Column numbers (top) -->
+                <div class="game-col-numbers">
+                  <div class="game-corner"></div>
+                  <div class="game-col-label">01</div>
+                  <div class="game-col-label">02</div>
+                  <div class="game-col-label">03</div>
+                  <div class="game-col-label">04</div>
+                  <div class="game-col-label">05</div>
+                  <div class="game-col-label">06</div>
+                  <div class="game-col-label">07</div>
+                  <div class="game-col-label">08</div>
+                  <div class="game-col-label">09</div>
+                  <div class="game-col-label">10</div>
+                  <div class="game-col-label">11</div>
+                  <div class="game-col-label">12</div>
+                  <div class="game-col-label">13</div>
+                  <div class="game-col-label">14</div>
+                  <div class="game-col-label">15</div>
+                  <div class="game-col-label">16</div>
+                </div>
+                
+                <!-- Grid with row numbers -->
+                <div class="game-grid-row">
+                  <!-- Row numbers (left) -->
+                  <div class="game-row-numbers">
+                    <div class="game-row-label">01</div>
+                    <div class="game-row-label">02</div>
+                    <div class="game-row-label">03</div>
+                    <div class="game-row-label">04</div>
+                    <div class="game-row-label">05</div>
+                    <div class="game-row-label">06</div>
+                    <div class="game-row-label">07</div>
+                    <div class="game-row-label">08</div>
+                    <div class="game-row-label">09</div>
+                    <div class="game-row-label">10</div>
+                    <div class="game-row-label">11</div>
+                    <div class="game-row-label">12</div>
+                    <div class="game-row-label">13</div>
+                    <div class="game-row-label">14</div>
+                    <div class="game-row-label">15</div>
+                    <div class="game-row-label">16</div>
+                  </div>
+                  
+                  <!-- Pixel Grid -->
+                  <div class="pixel-grid-wrapper">
+                    <div class="pixel-grid" id="pixelGrid"></div>
+                  </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="task-controls">
+                  <button class="control-btn control-btn--check" id="checkBtn">Перевірити</button>
+                </div>
+                
+                <div class="result-message" id="resultMessage"></div>
+              </div>
+            </div>
+
+            <!-- Right: Cipher list -->
+            <div class="cipher-list">
+              <h3>Шифр зображення:</h3>
+              <div class="cipher-codes">
+                <div class="cipher-code">1. 04,01,RED</div>
+                <div class="cipher-code">2. 05,01,RED</div>
+                <div class="cipher-code">3. 11,01,RED</div>
+                <div class="cipher-code">4. 12,01,RED</div>
+                <div class="cipher-code">5. 03,02,RED</div>
+                <div class="cipher-code">6. 04,02,RED</div>
+                <div class="cipher-code">7. 05,02,RED</div>
+                <div class="cipher-code">8. 06,02,RED</div>
+                <div class="cipher-code">9. 10,02,RED</div>
+                <div class="cipher-code">10. 11,02,RED</div>
+                <div class="cipher-code">11. 12,02,RED</div>
+                <div class="cipher-code">12. 13,02,RED</div>
+                <div class="cipher-code">13. 02,03,RED</div>
+                <div class="cipher-code">14. 03,03,RED</div>
+                <div class="cipher-code">15. 04,03,RED</div>
+                <div class="cipher-code">16. 05,03,RED</div>
+                <div class="cipher-code">17. 06,03,RED</div>
+                <div class="cipher-code">18. 07,03,RED</div>
+                <div class="cipher-code">19. 09,03,RED</div>
+                <div class="cipher-code">20. 10,03,RED</div>
+                <div class="cipher-code">21. 11,03,RED</div>
+                <div class="cipher-code">22. 12,03,RED</div>
+                <div class="cipher-code">23. 13,03,RED</div>
+                <div class="cipher-code">24. 14,03,RED</div>
+                <div class="cipher-code">25. 02,04,RED</div>
+                <div class="cipher-code">26. 03,04,RED</div>
+                <div class="cipher-code">27. 04,04,RED</div>
+                <div class="cipher-code">28. 05,04,RED</div>
+                <div class="cipher-code">29. 06,04,RED</div>
+                <div class="cipher-code">30. 07,04,RED</div>
+                <div class="cipher-code">31. 08,04,RED</div>
+                <div class="cipher-code">32. 09,04,RED</div>
+                <div class="cipher-code">33. 10,04,RED</div>
+                <div class="cipher-code">34. 11,04,RED</div>
+                <div class="cipher-code">35. 12,04,RED</div>
+                <div class="cipher-code">36. 13,04,RED</div>
+                <div class="cipher-code">37. 14,04,RED</div>
+                <div class="cipher-code">38. 02,05,RED</div>
+                <div class="cipher-code">39. 03,05,RED</div>
+                <div class="cipher-code">40. 04,05,RED</div>
+                <div class="cipher-code">41. 05,05,RED</div>
+                <div class="cipher-code">42. 06,05,RED</div>
+                <div class="cipher-code">43. 07,05,RED</div>
+                <div class="cipher-code">44. 08,05,RED</div>
+                <div class="cipher-code">45. 09,05,RED</div>
+                <div class="cipher-code">46. 10,05,RED</div>
+                <div class="cipher-code">47. 11,05,RED</div>
+                <div class="cipher-code">48. 12,05,RED</div>
+                <div class="cipher-code">49. 13,05,RED</div>
+                <div class="cipher-code">50. 14,05,RED</div>
+                <div class="cipher-code">51. 03,06,RED</div>
+                <div class="cipher-code">52. 04,06,RED</div>
+                <div class="cipher-code">53. 05,06,RED</div>
+                <div class="cipher-code">54. 06,06,RED</div>
+                <div class="cipher-code">55. 07,06,RED</div>
+                <div class="cipher-code">56. 08,06,RED</div>
+                <div class="cipher-code">57. 09,06,RED</div>
+                <div class="cipher-code">58. 10,06,RED</div>
+                <div class="cipher-code">59. 11,06,RED</div>
+                <div class="cipher-code">60. 12,06,RED</div>
+                <div class="cipher-code">61. 13,06,RED</div>
+                <div class="cipher-code">62. 04,07,RED</div>
+                <div class="cipher-code">63. 05,07,RED</div>
+                <div class="cipher-code">64. 06,07,RED</div>
+                <div class="cipher-code">65. 07,07,RED</div>
+                <div class="cipher-code">66. 08,07,RED</div>
+                <div class="cipher-code">67. 09,07,RED</div>
+                <div class="cipher-code">68. 10,07,RED</div>
+                <div class="cipher-code">69. 11,07,RED</div>
+                <div class="cipher-code">70. 12,07,RED</div>
+                <div class="cipher-code">71. 05,08,RED</div>
+                <div class="cipher-code">72. 06,08,RED</div>
+                <div class="cipher-code">73. 07,08,RED</div>
+                <div class="cipher-code">74. 08,08,RED</div>
+                <div class="cipher-code">75. 09,08,RED</div>
+                <div class="cipher-code">76. 10,08,RED</div>
+                <div class="cipher-code">77. 11,08,RED</div>
+                <div class="cipher-code">78. 06,09,RED</div>
+                <div class="cipher-code">79. 07,09,RED</div>
+                <div class="cipher-code">80. 08,09,RED</div>
+                <div class="cipher-code">81. 09,09,RED</div>
+                <div class="cipher-code">82. 10,09,RED</div>
+                <div class="cipher-code">83. 07,10,RED</div>
+                <div class="cipher-code">84. 08,10,RED</div>
+                <div class="cipher-code">85. 09,10,RED</div>
+                <div class="cipher-code">86. 08,11,RED</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz__nav">
+          <a class="header__btn-link" href="quiz.html" role="button">
+            <button type="button" class="header__btn header__btn--outline">Назад</button>
+          </a>
+
+          <a class="header__btn-link" href="quiz3.html" role="button">
+            <button type="button" class="header__btn">Далі</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" aria-label="Підвал сайту">
+    <div class="container footer__wrap">
+      <h2 class="footer__title">Знання. Навички. Майбутнє.</h2>
+      <p class="footer__lead">
+        Пройди тест і отримай нові цифрові навички у простій ігровій формі. Твій перший крок до майбутнього вже тут — почни зараз і наприкінці отримай свій іменний PDF-сертифікат.
+      </p>
+      <hr class="footer__rule" />
+      <div class="footer__bottom">
+        <img class="footer__logo" src="assets/img/black-logo.svg" alt="Code Quest" />
+        <p class="footer__copy">© 2025 Code Quest. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // -------------------------------------------------------
+    // КЛЮЧ ДЛЯ ЗБЕРЕЖЕННЯ ПІКСЕЛІВ ЦЬОГО ЗАВДАННЯ
+    // -------------------------------------------------------
+    const PIXEL_STORAGE_KEY = 'cq_quiz2_pixels';
+
+    // -------------------------------------------------------
+    // ПРИКЛАД (ліве сердечко зверху)
+    // -------------------------------------------------------
+    const exampleGrid = document.getElementById('exampleGrid');
+    
+    const examplePattern = {
+      '6,1': 'BLACK', '7,1': 'BLACK', '8,1': 'BLACK',
+      '12,1': 'BLACK', '13,1': 'BLACK', '14,1': 'BLACK',
+      '5,2': 'BLACK', '6,2': 'RED', '7,2': 'RED', '8,2': 'RED', '9,2': 'BLACK',
+      '11,2': 'BLACK', '12,2': 'RED', '13,2': 'RED', '14,2': 'RED', '15,2': 'BLACK',
+      '4,3': 'BLACK',
+      '5,3': 'RED', '6,3': 'RED', '7,3': 'RED', '8,3': 'RED', '9,3': 'RED',
+      '10,3': 'BLACK',
+      '11,3': 'RED', '12,3': 'RED', '13,3': 'RED', '14,3': 'RED', '15,3': 'RED',
+      '16,3': 'BLACK',
+      '4,4': 'BLACK',
+      '5,4': 'RED', '6,4': 'RED', '7,4': 'RED', '8,4': 'RED', '9,4': 'RED',
+      '10,4': 'RED', '11,4': 'RED', '12,4': 'RED', '13,4': 'RED', '14,4': 'RED', '15,4': 'RED',
+      '16,4': 'BLACK',
+      '5,5': 'BLACK',
+      '6,5': 'RED', '7,5': 'RED', '8,5': 'RED', '9,5': 'RED', '10,5': 'RED',
+      '11,5': 'RED', '12,5': 'RED', '13,5': 'RED', '14,5': 'RED', '15,5': 'RED',
+      '16,5': 'BLACK',
+      '6,6': 'BLACK',
+      '7,6': 'RED', '8,6': 'RED', '9,6': 'RED', '10,6': 'RED',
+      '11,6': 'RED', '12,6': 'RED', '13,6': 'RED', '14,6': 'RED', '15,6': 'RED',
+      '16,6': 'BLACK',
+      '7,7': 'BLACK',
+      '8,7': 'RED', '9,7': 'RED', '10,7': 'RED',
+      '11,7': 'RED', '12,7': 'RED', '13,7': 'RED', '14,7': 'RED', '15,7': 'RED',
+      '16,7': 'BLACK',
+      '8,8': 'BLACK',
+      '9,8': 'RED', '10,8': 'RED', '11,8': 'RED', '12,8': 'RED', '13,8': 'RED', '14,8': 'RED', '15,8': 'RED',
+      '16,8': 'BLACK',
+      '9,9': 'BLACK',
+      '10,9': 'RED', '11,9': 'RED', '12,9': 'RED', '13,9': 'RED', '14,9': 'RED', '15,9': 'RED',
+      '16,9': 'BLACK',
+      '10,10': 'BLACK',
+      '11,10': 'RED', '12,10': 'RED', '13,10': 'RED', '14,10': 'RED', '15,10': 'RED',
+      '16,10': 'BLACK',
+      '11,11': 'BLACK',
+      '12,11': 'RED', '13,11': 'RED', '14,11': 'RED', '15,11': 'RED',
+      '16,11': 'BLACK',
+      '12,12': 'BLACK',
+      '13,12': 'RED', '14,12': 'RED', '15,12': 'RED',
+      '16,12': 'BLACK',
+      '13,13': 'BLACK', '14,13': 'RED', '15,13': 'BLACK',
+      '14,14': 'BLACK'
+    };
+    
+    for (let row = 1; row <= 16; row++) {
+      for (let col = 1; col <= 16; col++) {
+        const cell = document.createElement('div');
+        cell.className = 'example-cell';
+        const key = `${col},${row}`;
+        if (examplePattern[key]) {
+          if (examplePattern[key] === 'RED') {
+            cell.style.background = '#FF0000';
+          } else if (examplePattern[key] === 'BLACK') {
+            cell.style.background = '#000000';
+          }
+        }
+        exampleGrid.appendChild(cell);
+      }
+    }
+
+    // -------------------------------------------------------
+    // ДАНІ УЧНЯ
+    // -------------------------------------------------------
+    const saved = localStorage.getItem('cq_registration');
+    let data = null;
+    try { data = saved ? JSON.parse(saved) : null; } catch (_) {}
+
+    if (!data || !data.name || !data.klass) {
+      window.location.href = 'registration.html';
+    } else {
+      document.getElementById('student-title').textContent = data.name;
+      document.getElementById('student-class').textContent = data.klass;
+    }
+
+    document.getElementById('changeBtn').addEventListener('click', () => {
+      window.location.href = 'registration.html#edit';
+    });
+
+    // -------------------------------------------------------
+    // ІГРОВЕ ПОЛЕ (пікселі)
+    // -------------------------------------------------------
+    let selectedColor = '#FF0000';
+    const grid = document.getElementById('pixelGrid');
+    const gridData = [];
+
+    // Правильна відповідь (сердечко)
+    const correctAnswer = [
+      '4,1,RED', '5,1,RED', '11,1,RED', '12,1,RED',
+      '3,2,RED', '4,2,RED', '5,2,RED', '6,2,RED', '10,2,RED', '11,2,RED', '12,2,RED', '13,2,RED',
+      '2,3,RED', '3,3,RED', '4,3,RED', '5,3,RED', '6,3,RED', '7,3,RED', '9,3,RED', '10,3,RED', '11,3,RED', '12,3,RED', '13,3,RED', '14,3,RED',
+      '2,4,RED', '3,4,RED', '4,4,RED', '5,4,RED', '6,4,RED', '7,4,RED', '8,4,RED', '9,4,RED', '10,4,RED', '11,4,RED', '12,4,RED', '13,4,RED', '14,4,RED',
+      '2,5,RED', '3,5,RED', '4,5,RED', '5,5,RED', '6,5,RED', '7,5,RED', '8,5,RED', '9,5,RED', '10,5,RED', '11,5,RED', '12,5,RED', '13,5,RED', '14,5,RED',
+      '3,6,RED', '4,6,RED', '5,6,RED', '6,6,RED', '7,6,RED', '8,6,RED', '9,6,RED', '10,6,RED', '11,6,RED', '12,6,RED', '13,6,RED',
+      '4,7,RED', '5,7,RED', '6,7,RED', '7,7,RED', '8,7,RED', '9,7,RED', '10,7,RED', '11,7,RED', '12,7,RED',
+      '5,8,RED', '6,8,RED', '7,8,RED', '8,8,RED', '9,8,RED', '10,8,RED', '11,8,RED',
+      '6,9,RED', '7,9,RED', '8,9,RED', '9,9,RED', '10,9,RED',
+      '7,10,RED', '8,10,RED', '9,10,RED',
+      '8,11,RED'
+    ];
+
+    // --- збереження / відновлення ---
+    function savePixelGrid() {
+      localStorage.setItem(PIXEL_STORAGE_KEY, JSON.stringify(gridData));
+    }
+
+    function restorePixelGrid() {
+      const raw = localStorage.getItem(PIXEL_STORAGE_KEY);
+      if (!raw) return;
+      let saved;
+      try { saved = JSON.parse(raw); } catch (_) { return; }
+      if (!Array.isArray(saved)) return;
+
+      const cells = document.querySelectorAll('.pixel-cell');
+      cells.forEach((cell, i) => {
+        const color = saved[i] || '#FFFFFF';
+        gridData[i] = color;
+        cell.style.background = color;
+      });
+    }
+
+    // Створюємо сітку 16×16
+    for (let i = 0; i < 256; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'pixel-cell';
+      cell.dataset.index = i;
+      cell.dataset.row = Math.floor(i / 16) + 1;
+      cell.dataset.col = (i % 16) + 1;
+      grid.appendChild(cell);
+      gridData.push('#FFFFFF');
+    }
+
+    // Спочатку пробуємо відновити попередній малюнок
+    restorePixelGrid();
+
+    // Вибір кольору
+    document.querySelectorAll('.color-option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedColor = this.dataset.color;
+      });
+    });
+
+    // Малювання
+    let isMouseDown = false;
+    
+    grid.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('pixel-cell')) {
+        isMouseDown = true;
+        paintCell(e.target);
+      }
+    });
+
+    grid.addEventListener('mouseover', (e) => {
+      if (isMouseDown && e.target.classList.contains('pixel-cell')) {
+        paintCell(e.target);
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isMouseDown = false;
+    });
+
+    function paintCell(cell) {
+      const index = parseInt(cell.dataset.index);
+      cell.style.background = selectedColor;
+      gridData[index] = selectedColor;
+      savePixelGrid(); // зберігаємо після кожного мазка
+    }
+
+    // -------------------------------------------------------
+    // Перевірка відповіді
+    // -------------------------------------------------------
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      const userAnswer = [];
+      document.querySelectorAll('.pixel-cell').forEach(cell => {
+        const color = cell.style.background || '#FFFFFF';
+        if (color !== 'rgb(255, 255, 255)' && color !== '#FFFFFF' && color !== 'white') {
+          const col = cell.dataset.col;
+          const row = cell.dataset.row;
+          const colorName = getColorName(rgbToHex(color));
+          userAnswer.push(`${col},${row},${colorName}`);
+        }
+      });
+
+      const userSorted = userAnswer.sort().join('|');
+      const correctSorted = correctAnswer.sort().join('|');
+
+      const resultMsg = document.getElementById('resultMessage');
+      
+      if (userSorted === correctSorted) {
+        resultMsg.textContent = '✅ Правильно! Ти успішно розшифрував зображення!';
+        resultMsg.className = 'result-message result-message--success';
+        resultMsg.style.display = 'block';
+      } else {
+        const correctCount = userAnswer.filter(item => correctAnswer.includes(item)).length;
+        resultMsg.textContent = `❌ Не зовсім правильно. Правильних пікселів: ${correctCount} з ${correctAnswer.length}`;
+        resultMsg.className = 'result-message result-message--error';
+        resultMsg.style.display = 'block';
+      }
+    });
+
+    function getColorName(hex) {
+      const colors = {
+        '#ff0000': 'RED',
+        '#000000': 'BLACK',
+        '#0066ff': 'BLUE',
+        '#ffff00': 'YELLOW',
+        '#ffffff': 'WHITE'
+      };
+      return colors[hex.toLowerCase()] || 'UNKNOWN';
+    }
+
+    function rgbToHex(rgb) {
+      if (rgb.startsWith('#')) return rgb;
+      const values = rgb.match(/\d+/g);
+      if (!values) return '#ffffff';
+      const hex = values.map(x => {
+        const hexValue = parseInt(x).toString(16);
+        return hexValue.length === 1 ? '0' + hexValue : hexValue;
+      }).join('');
+      return '#' + hex;
+    }
+  });
+</script>
+
+</body>
+</html>

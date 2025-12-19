@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CODE — Результати</title>
+  <meta name="description" content="Підсумки проходження Code Quest та прогрес учня." />
+  <link rel="icon" href="../public/favicon.ico" type="image/x-icon">
+
+  
+  <!-- Fonts -->
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://unpkg.com/@pdf-lib/fontkit/dist/fontkit.umd.js"></script>
+  <script src="https://unpkg.com/downloadjs@1.4.7/download.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <style>
+    .header__btn--outline {
+      background: transparent;
+      color: #383838;
+      border: 2px solid #383838;
+    }
+    .header__btn--outline:hover {
+      background: #383838;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(56, 56, 56, 0.3);
+    }
+
+    .task1__title{
+      margin-top: 96px;
+    }
+
+    .results-summary {
+      margin-top: 24px;
+      padding: 24px 28px;
+      border-radius: 16px;
+      background: #F5F8FF;
+      border: 1px solid #E0E7FF;
+    }
+
+    .results-summary__title {
+      font: 700 22px 'Unbounded','Inter',sans-serif;
+      margin: 0 0 12px;
+      color: #0267FB;
+    }
+
+    .results-summary__text {
+      margin: 0;
+      font: 500 16px 'Inter',sans-serif;
+      color: #0A142F;
+    }
+
+    .results-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .result-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px 20px;
+      border: 1px solid #E8EDF5;
+      box-shadow: 0 8px 25px rgba(10, 20, 47, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .result-card__title {
+      font: 600 16px 'Gilroy','Inter',sans-serif;
+      color: #0A142F;
+      margin: 0;
+    }
+
+    .result-card__step {
+      font-size: 14px;
+      font-weight: 500;
+      color: #7A8199;
+    }
+
+    .result-card__status {
+      margin-top: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #E9F8EE;
+      color: #0E7A35;
+      width: fit-content;
+    }
+
+    .result-card__status--pending {
+      background: #FFF5E6;
+      color: #B65C00;
+    }
+
+    .result-card__status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .results-badge {
+      margin-top: 32px;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #0267FB;
+      color: #fff;
+      font-family: 'Gilroy','Inter',sans-serif;
+    }
+
+    .results-badge__score {
+      font-size: 24px;
+      font-weight: 800;
+      font-family: 'Unbounded','Inter',sans-serif;
+    }
+
+    .results-badge__label {
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    .cert-card {
+      margin-top: 32px;
+      padding: 24px 24px 22px;
+      border-radius: 18px;
+      background: #0A142F;
+      color: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cert-card__title {
+      font-family: 'Unbounded','Inter',sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+
+    .cert-card__text {
+      margin: 0;
+      font-size: 15px;
+      max-width: 420px;
+      opacity: 0.9;
+    }
+
+    .cert-card__actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Gilroy', 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn--primary {
+      background: #D2F801;
+      color: #0A142F;
+    }
+
+    .btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(210, 248, 1, .4);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+    }
+
+    .btn--ghost:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,.3);
+    }
+
+    .quiz__nav {
+      display:flex;
+      justify-content:flex-start;
+      margin-top:32px;
+      gap: 20px;
+    }
+
+    .results-note {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #7A8199;
+      font-family: 'Gilroy',sans-serif;
+    }
+  </style>
+</head>
+<body class="page--registration">
+  <!-- Header -->
+  <header class="header masthead">
+    <div class="container">
+      <div class="header__shell">
+        <div class="header__inner"> 
+          <a class="header__logo" href="index.html">
+            <img src="assets/img/logo.svg" alt="CODE Logo">
+          </a>
+
+          <nav class="header__nav" aria-label="Головна навігація">
+            <ul class="header__menu">
+              <li class="header__item"><a class="header__link" href="index.html">Головна</a></li>
+              <li class="header__item"><a class="header__link header__link--active" href="quiz.html">Почати</a></li>
+              <li class="header__item"><a class="header__link" href="about.html">Про тест</a></li>
+            </ul>
+          </nav>
+
+          <div class="header__actions" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div class="hero hero--registration">
+        <div class="hero__inner grid-reg">
+          <section class="reg-card" aria-labelledby="student-title">
+            <h1 class="reg-card__title" id="student-title"></h1>
+            <p class="reg-card__lead">Клас: <span id="student-class"></span></p>
+            <button id="changeBtn" class="reg-submit" type="button">Змінити</button>
+          </section>
+
+          <div class="reg-visual" aria-hidden="true">
+            <img src="assets/img/registration-hero.png" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Finish / Results Section -->
+  <section class="task1">
+    <div class="container">
+      <!-- Progress bar -->
+      <div class="task1__progress">
+        <div class="progress-bar">
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="task1__card">
+        <h1 class="task1__title">Вітаємо, ти завершив Code Quest!</h1>
+
+        <div class="results-summary">
+          <h2 class="results-summary__title">Твої результати</h2>
+          <p class="results-summary__text" id="resultsIntro">
+            Зараз ти бачиш, які етапи вже пройшов. Використовуй ці результати разом із вчителем, щоб обговорити,
+            що вийшло найкраще, а де ще можна потренуватися.
+          </p>
+        </div>
+
+        <div class="results-badge" id="resultsBadge" aria-live="polite">
+          <span class="results-badge__score" id="resultsScore">0 / 5</span>
+          <span class="results-badge__label">пройдених етапів</span>
+        </div>
+
+        <div class="results-grid" id="resultsGrid">
+          <!-- Карточки наповнюються скриптом -->
+        </div>
+
+        <p class="results-note">
+          Дані зберігаються тільки в цьому браузері в <code>localStorage</code>. Якщо очистити історію/кеш — результати зникнуть.
+        </p>
+
+        <div class="cert-card">
+          <div>
+            <h2 class="cert-card__title">Твій PDF-сертифікат</h2>
+            <p class="cert-card__text">
+              На основі цих результатів ти можеш отримати іменний PDF-сертифікат. Покажи цей екран учителю,
+              щоб він завантажив або роздрукував сертифікат для тебе.
+            </p>
+          </div>
+          <div class="cert-card__actions">
+            <!-- поки що лінк-заглушка -->
+            <a href="#" class="btn btn--primary" id="downloadCertBtn">
+              Завантажити сертифікат (PDF)
+            </a>
+            <button type="button" class="btn btn--ghost" id="restartBtn">
+              Пройти квест ще раз
+            </button>
+          </div>
+        </div>
+
+        <div class="quiz__nav">
+          <a class="header__btn-link" href="quiz5.html" role="button">
+            <button type="button" class="header__btn header__btn--outline">Назад</button>
+          </a>
+
+          <a class="header__btn-link" href="index.html" role="button">
+            <button type="button" class="header__btn">На головну</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" aria-label="Підвал сайту">
+    <div class="container footer__wrap">
+      <h2 class="footer__title">Знання. Навички. Майбутнє.</h2>
+      <p class="footer__lead">
+        Пройди тест і отримай нові цифрові навички у простій ігровій формі. Твій перший крок до майбутнього вже тут — почни зараз і наприкінці отримай свій іменний PDF-сертифікат.
+      </p>
+      <hr class="footer__rule" />
+      <div class="footer__bottom">
+        <img class="footer__logo" src="assets/img/black-logo.svg" alt="Code Quest" />
+        <p class="footer__copy">© 2025 Code Quest. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+<!-- pdf-lib для роботи з PDF -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Дані учня
+      const saved = localStorage.getItem('cq_registration');
+      let data = null;
+      try {
+        data = saved ? JSON.parse(saved) : null;
+      } catch {
+        data = null;
+      }
+
+      if (!data || !data.name || !data.klass) {
+        window.location.href = 'registration.html';
+        return;
+      }
+
+      const titleEl = document.getElementById('student-title');
+      const classEl = document.getElementById('student-class');
+      if (titleEl) titleEl.textContent = data.name;
+      if (classEl) classEl.textContent = data.klass;
+
+      const changeBtn = document.getElementById('changeBtn');
+      if (changeBtn) {
+        changeBtn.addEventListener('click', () => {
+          window.location.href = 'registration.html#edit';
+        });
+      }
+
+      // 2. Модулі / результати
+      const modules = [
+        { key: 'cq_quiz1_state', step: 'Крок 1', title: 'Системи числення',
+          desc: 'Перетворення між двійковою, десятковою та шістнадцятковою системами.', points: 20 },
+        { key: 'cq_quiz2_state', step: 'Крок 2', title: 'Кодування інформації',
+          desc: 'Біти, байти, кодування символів та базове кодування даних.', points: 20 },
+        { key: 'cq_quiz3_state', step: 'Крок 3', title: 'ASCII та символи',
+          desc: 'Розуміння кодових таблиць та відповідностей символів.', points: 20 },
+        { key: 'cq_quiz4_state', step: 'Крок 4', title: 'Тестові завдання',
+          desc: 'Комбіновані завдання з варіантами відповіді та співставленням.', points: 20 },
+        { key: 'cq_quiz5_state', step: 'Крок 5', title: 'Шифр Цезаря',
+          desc: 'Розшифрування повідомлення за шифром Цезаря та квадратом Полібія.', points: 20 }
+      ];
+
+      const grid = document.getElementById('resultsGrid');
+      const scoreEl = document.getElementById('resultsScore');
+      let completedCount = 0;
+      let totalPoints = 0;
+
+      if (grid) {
+        modules.forEach(mod => {
+          const raw = localStorage.getItem(mod.key);
+          const isCompleted = !!raw;
+          if (isCompleted) {
+            completedCount++;
+            totalPoints += mod.points;
+          }
+
+          const card = document.createElement('article');
+          card.className = 'result-card';
+
+          const stepEl = document.createElement('div');
+          stepEl.className = 'result-card__step';
+          stepEl.textContent = mod.step;
+
+          const titleElCard = document.createElement('h3');
+          titleElCard.className = 'result-card__title';
+          titleElCard.textContent = mod.title;
+
+          const descEl = document.createElement('p');
+          descEl.className = 'task1__text';
+          descEl.style.margin = '4px 0 0';
+          descEl.textContent = mod.desc;
+
+          const statusEl = document.createElement('div');
+          statusEl.className =
+            'result-card__status' + (isCompleted ? '' : ' result-card__status--pending');
+
+          const dot = document.createElement('span');
+          dot.className = 'result-card__status-dot';
+          statusEl.appendChild(dot);
+
+          const label = document.createElement('span');
+          label.textContent = isCompleted ? `Етап пройдено (+${mod.points} балів)` : 'Етап ще не завершено';
+          statusEl.appendChild(label);
+
+          card.appendChild(stepEl);
+          card.appendChild(titleElCard);
+          card.appendChild(descEl);
+          card.appendChild(statusEl);
+
+          grid.appendChild(card);
+        });
+      }
+
+      if (scoreEl) {
+        scoreEl.textContent = `${totalPoints} / 100`;
+      }
+
+      // Оновлюємо текст бейджа
+      const badgeLabel = document.querySelector('.results-badge__label');
+      if (badgeLabel) {
+        badgeLabel.textContent = 'балів зі 100';
+      }
+
+      // 3. "Пройти ще раз"
+      const restartBtn = document.getElementById('restartBtn');
+      if (restartBtn) {
+        restartBtn.addEventListener('click', () => {
+          window.location.href = 'quiz.html';
+        });
+      }
+
+      // 4. Завантажити сертифікат
+      const downloadBtn = document.getElementById('downloadCertBtn');
+
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+
+          if (!window.PDFLib) {
+            alert('Бібліотека pdf-lib не завантажена.');
+            return;
+          }
+
+          const { PDFDocument, rgb } = PDFLib;
+
+          try {
+            console.log('Завантажуємо PDF та шрифт...');
+            
+            const [pdfBytes, fontBytes] = await Promise.all([
+              fetch('assets/pdf/certificate-template.pdf').then(r => {
+                if (!r.ok) throw new Error(`PDF template fetch failed: ${r.status}`);
+                return r.arrayBuffer();
+              }),
+              fetch('assets/fonts/Gilroy-Regular.ttf').then(r => {
+                if (!r.ok) throw new Error(`Font fetch failed: ${r.status}`);
+                return r.arrayBuffer();
+              })
+            ]);
+
+            console.log('PDF та шрифт завантажено. Обробляємо...');
+            const pdfDoc = await PDFDocument.load(pdfBytes);
+            
+            if (window.fontkit) {
+              pdfDoc.registerFontkit(window.fontkit);
+            }
+            const customFont = await pdfDoc.embedFont(fontBytes, { subset: true });
+            
+            const regRaw = localStorage.getItem('cq_registration');
+            let studentName = 'Учасник';
+            let studentClass = '';
+
+            if (regRaw) {
+              try {
+                const reg = JSON.parse(regRaw);
+                if (reg.name) studentName = reg.name;
+                if (reg.klass) studentClass = reg.klass;
+              } catch (err) {
+                console.warn('Помилка читання registration:', err);
+              }
+            }
+
+            // Формат балів: "80 / 100 балів"
+            const scoreText = `${totalPoints} / 100`;
+            const now = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            const dateText = `${pad(now.getDate())}.${pad(now.getMonth() + 1)}.${now.getFullYear()}`;
+
+            let hasFormFields = false;
+            try {
+              const form = pdfDoc.getForm();
+              const fields = form.getFields();
+              
+              console.log('Доступні поля форми:', fields.map(f => f.getName()));
+
+              if (fields.length > 0) {
+                hasFormFields = true;
+                console.log('Знайдено форму! Заповнюємо поля з кастомним шрифтом...');
+
+                const trySetTextField = (possibleNames, value) => {
+                  for (const name of possibleNames) {
+                    try {
+                      const field = form.getTextField(name);
+                      if (field) {
+                        field.setText(value);
+                        field.updateAppearances(customFont);
+                        console.log(`✓ Заповнено поле "${name}": ${value}`);
+                        return true;
+                      }
+                    } catch (e) {
+                      // Поле не знайдено
+                    }
+                  }
+                  console.warn(`✗ Не знайдено жодного поля з імен:`, possibleNames);
+                  return false;
+                };
+
+                trySetTextField(['studentName', 'name', 'Name', 'ПІБ', 'PIB'], studentName);
+                trySetTextField(['date', 'Date', 'Дата', 'DATA'], dateText);
+                trySetTextField(['score', 'Score', 'Результат', 'Result'], scoreText);
+                trySetTextField(['class', 'Class', 'Клас', 'KLAS'], studentClass);
+
+                console.log('Фіксуємо поля форми...');
+                form.flatten();
+              }
+            } catch (formError) {
+              console.log('Помилка з формою або форми немає:', formError.message);
+            }
+
+            if (!hasFormFields) {
+              console.log('Малюємо текст за координатами...');
+
+              const page = pdfDoc.getPages()[0];
+              const { width, height } = page.getSize();
+
+              console.log(`Розміри сторінки: ${width}x${height}`);
+
+              page.drawText(dateText, {
+                x: width - 260,
+                y: height - 260,
+                size: 18,
+                font: customFont,
+                color: rgb(0, 0, 0)
+              });
+
+              page.drawText(studentName, {
+                x: width - 260,
+                y: height - 300,
+                size: 18,
+                font: customFont,
+                color: rgb(0, 0, 0)
+              });
+
+              page.drawText(scoreText, {
+                x: width - 260,
+                y: height - 380,
+                size: 18,
+                font: customFont,
+                color: rgb(0, 0, 0)
+              });
+
+              page.drawText(studentClass, {
+                x: 80,
+                y: 120,
+                size: 14,
+                font: customFont,
+                color: rgb(0, 0, 0)
+              });
+            }
+
+            console.log('Зберігаємо PDF...');
+            const finalBytes = await pdfDoc.save();
+            const blob = new Blob([finalBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+
+            console.log('✓ PDF готовий до завантаження!');
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `CodeQuest_Сертифікат_${studentName}_${totalPoints}балів.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+
+          } catch (err) {
+            console.error('Повна помилка:', err);
+            console.error('Stack trace:', err.stack);
+            alert(`Не вдалося згенерувати сертифікат.\nПомилка: ${err.message}\n\nПеревір консоль (F12 → Console) для деталей.`);
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

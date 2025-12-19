@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CODE — Реєстрація</title>
+  <meta name="description" content="Реєстрація перед проходженням тесту Code Quest." />
+
+  <!-- Favicon -->
+  <link rel="icon" href="../public/favicon.ico" type="image/x-icon">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="page--registration">
+  <!-- Header -->
+<!-- Header -->
+<header class="header masthead">
+  <div class="container">
+    <div class="header__shell">
+      <div class="header__inner">
+        <a class="header__logo" href="index.html">
+          <img src="assets/img/logo.svg" alt="CODE Logo">
+        </a>
+
+        <nav class="header__nav" aria-label="Головна навігація">
+          <ul class="header__menu">
+            <li class="header__item"><a class="header__link" href="index.html">Головна</a></li>
+            <li class="header__item"><a class="header__link header__link--active" href="registration.html">Почати</a></li>
+            <li class="header__item"><a class="header__link" href="about.html">Про тест</a></li>
+          </ul>
+        </nav>
+
+        <!-- На сторінці реєстрації праві дії приховані через CSS-скоуп -->
+        <div class="header__actions" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- Hero (registration) — без додаткового .container, щоб збігалися поля -->
+    <div class="hero hero--registration">
+      <div class="hero__inner grid-reg">
+        <!-- Left: форма -->
+        <section class="reg-card" aria-labelledby="reg-title">
+          <h1 class="reg-card__title" id="reg-title">Реєстрація на курс</h1>
+          <p class="reg-card__lead">Для реєстрації введіть ваші дані</p>
+
+          <form id="regForm" class="reg-form" novalidate>
+            <label class="reg-label" for="regName">Введіть ваше ім’я</label>
+            <input class="reg-input" id="regName" name="name" type="text" placeholder="Ваше ім’я" required>
+
+            <label class="reg-label" for="regClass">Введіть ваш навчальний клас</label>
+            <input class="reg-input" id="regClass" name="klass" type="text" placeholder="Ваш клас" required>
+
+            <button class="reg-submit" type="submit">Підтвердити</button>
+          </form>
+        </section>
+
+        <!-- Right: ілюстрація -->
+        <div class="reg-visual" aria-hidden="true">
+          <img src="assets/img/registration-hero.png" alt="">
+        </div>
+      </div>
+    </div>
+    <!-- /Hero -->
+  </div>
+</header>
+
+  <!-- Footer -->
+  <footer class="footer" aria-label="Підвал сайту">
+    <div class="container footer__wrap">
+      <h2 class="footer__title">Знання. Навички. Майбутнє.</h2>
+      <p class="footer__lead">
+        Пройди тест і отримай нові цифрові навички у простій ігровій формі. Твій перший крок до майбутнього вже тут — почни зараз і наприкінці отримай свій іменний PDF-сертифікат.
+      </p>
+      <hr class="footer__rule" />
+      <div class="footer__bottom">
+        <img class="footer__logo" src="assets/img/black-logo.svg" alt="Code Quest" />
+        <p class="footer__copy">© 2025 Code Quest. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    // Сабміт форми: зберегти дані та перейти до тесту
+    document.getElementById('regForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name  = document.getElementById('regName').value.trim();
+      const klass = document.getElementById('regClass').value.trim();
+      if (!name || !klass) { alert('Будь ласка, введіть ім’я і клас'); return; }
+
+      localStorage.setItem('cq_registration', JSON.stringify({ name, klass, ts: Date.now() }));
+      // змініть за потреби на реальну першу сторінку тесту
+      window.location.href = 'quiz.html';
+    });
+  </script>
+</body>
+</html>

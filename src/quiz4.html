@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CODE — Квіз 4: Тестові завдання</title>
+  <meta name="description" content="Комбінований тест: одна відповідь, кілька відповідей, співставлення 4×4." />
+  <link rel="icon" href="../public/favicon.ico" type="image/x-icon">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <style>
+    /* ===== Quiz 4 specific (стилі залишаємо, щоб виглядав добре) ===== */
+    .task1__title{ margin-top: 96px; }
+    .qa-block{ margin: 28px 0 36px; }
+    .qa-title{
+      font: 700 28px 'Unbounded','Inter',sans-serif;
+      color:#0267FB; margin: 0 0 14px;
+    }
+    .header__btn--outline {
+      background: transparent;
+      color: #383838;
+      border: 2px solid #383838;
+    }
+
+    .header__btn--outline:hover {
+      background: #383838;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(56, 56, 56, 0.3);
+    }
+    .qa-question{ font: 600 16px/1.45 'Gilroy','Inter',sans-serif; color:#0A142F; margin: 18px 0 10px; }
+    .qa-options{
+      display:grid;
+      gap:10px;
+      margin: 8px 0 0;
+      color: #000;
+    }
+    .qa-options label{
+      display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:10px; background:#F7FAFF;
+      border:1px solid #E8EDF5; cursor:pointer;
+    }
+    .qa-options input{ transform: translateY(1px); }
+
+    /* 4×4 matching grid */
+    .match{
+      background:#fff; border:2px solid #0267FB; border-radius:16px; overflow:hidden;
+    }
+    .match__grid{
+      --cell: 64px;
+      display:grid;
+      grid-template-columns: 180px repeat(4, 1fr);
+      align-items: stretch; text-align:center;
+    }
+    .match__cell{
+      display:flex; align-items:center; justify-content:center;
+      min-height: var(--cell);
+      border-bottom:1px solid #E8EDF5; border-right:1px solid #E8EDF5;
+      font: 600 16px 'Gilroy','Inter',sans-serif; color:#0A142F;
+      background:#fff; user-select:none;
+    }
+    .match__cell--head{ background:#0267FB; color:#fff; border-color:#0267FB; }
+    .match__cell--rowhead{ background:#F5F8FF; font-weight:700; }
+    .match__btn{
+      width:100%; height:100%; border:0; background:transparent; cursor:pointer;
+      padding:0; font: inherit; color: inherit;
+    }
+    .match__btn.is-selected{ background:#0267FB; color:#fff; }
+    .match__btn.is-correct{ outline:2px solid #4CAF50; outline-offset:-2px; }
+    .match__btn.is-wrong{ outline:2px solid #ff5252; outline-offset:-2px; }
+    .match__cell:last-child, .match__grid > :nth-child(5n){ border-right:0; }
+    .match__grid > :nth-last-child(-n+5){ border-bottom:0; }
+
+    /* Result bar (стилі залишаємо, на випадок якщо знадобляться пізніше)*/
+    .result{
+      margin-top: 18px; padding: 14px 16px; border-radius:12px; display:none; font-weight:700;
+      font-family:'Gilroy','Inter',sans-serif;
+    }
+    .result--ok   { background:#E9F8EE; color:#0E7A35; }
+    .result--bad  { background:#FFEAEA; color:#B00020; }
+
+    .quiz__nav{ display:flex; justify-content:flex-start; margin-top:28px; gap: 20px; }
+  </style>
+</head>
+<body class="page--registration">
+  <header class="header masthead">
+  <div class="container">
+    <div class="header__shell">
+      <div class="header__inner"> 
+        <a class="header__logo" href="index.html">
+          <img src="assets/img/logo.svg" alt="CODE Logo">
+        </a>
+
+        <nav class="header__nav" aria-label="Головна навігація">
+          <ul class="header__menu">
+            <li class="header__item"><a class="header__link" href="index.html">Головна</a></li>
+            <li class="header__item"><a class="header__link header__link--active" href="quiz.html">Почати</a></li>
+            <li class="header__item"><a class="header__link" href="about.html">Про тест</a></li>
+          </ul>
+        </nav>
+
+        <div class="header__actions" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="hero hero--registration">
+      <div class="hero__inner grid-reg">
+        <section class="reg-card" aria-labelledby="student-title">
+          <h1 class="reg-card__title" id="student-title"></h1>
+          <p class="reg-card__lead">Клас: <span id="student-class"></span></p>
+          <button id="changeBtn" class="reg-submit" type="button">Змінити</button>
+        </section>
+
+        <div class="reg-visual" aria-hidden="true">
+          <img src="assets/img/registration-hero.png" alt="">
+        </div>
+      </div>
+    </div>
+    </div>
+</header>
+
+
+  <section class="task1">
+    <div class="container">
+      <div class="task1__progress">
+        <div class="progress-bar">
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--completed"></div>
+          <div class="progress-bar__step progress-bar__step--active"></div>
+          <div class="progress-bar__step"></div>
+        </div>
+      </div>
+
+      <div class="task1__card">
+        <h1 class="task1__title">Тестові завдання</h1>
+
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Мета</h2>
+          <p class="task1__text">Перевір свої знання з двійкової, десяткової, шістнадцяткової систем числення та ASCII.</p>
+        </div>
+
+        <div class="task1__section qa-block" id="block-radio">
+          <h2 class="task1__subtitle">Одна правильна відповідь</h2>
+
+          <div class="qa-question">1) Який код ASCII відповідає букві ‘A’?</div>
+          <div class="qa-options">
+            <label><input type="radio" name="q1" value="65"> 65</label>
+            <label><input type="radio" name="q1" value="97"> 97</label>
+            <label><input type="radio" name="q1" value="32"> 32</label>
+            <label><input type="radio" name="q1" value="48"> 48</label>
+          </div>
+
+          <div class="qa-question">2) Яка база у шістнадцятковій системі числення?</div>
+          <div class="qa-options">
+            <label><input type="radio" name="q2" value="2"> 2</label>
+            <label><input type="radio" name="q2" value="8"> 8</label>
+            <label><input type="radio" name="q2" value="10"> 10</label>
+            <label><input type="radio" name="q2" value="16"> 16</label>
+          </div>
+
+          <div class="qa-question">3) 1 байт — це…</div>
+          <div class="qa-options">
+            <label><input type="radio" name="q3" value="4"> 4 біти</label>
+            <label><input type="radio" name="q3" value="8"> 8 біт</label>
+            <label><input type="radio" name="q3" value="16"> 16 біт</label>
+            <label><input type="radio" name="q3" value="32"> 32 біти</label>
+          </div>
+        </div>
+        
+        <div class="task1__section qa-block" id="block-radio-extra">
+            <div class="qa-question">5) Чому дорівнює десяткове число 10 в двійковій системі?</div>
+            <div class="qa-options">
+                <label><input type="radio" name="q5" value="1010"> 1010</label>
+                <label><input type="radio" name="q5" value="1111"> 1111</label>
+                <label><input type="radio" name="q5" value="1000"> 1000</label>
+                <label><input type="radio" name="q5" value="101"> 101</label>
+            </div>
+
+            <div class="qa-question">6) Який символ використовується для позначення шістнадцяткового числа?</div>
+            <div class="qa-options">
+                <label><input type="radio" name="q6" value="$">$</label>
+                <label><input type="radio" name="q6" value="0x"> 0x</label>
+                <label><input type="radio" name="q6" value="#"> #</label>
+                <label><input type="radio" name="q6" value="%"> %</label>
+            </div>
+        </div>
+        <div class="task1__section qa-block" id="block-checkbox">
+          <h2 class="task1__subtitle">Кілька правильних відповідей</h2>
+          <div class="qa-question">4) Обери всі приклади коректних шістнадцяткових чисел:</div>
+          <div class="qa-options">
+            <label><input type="checkbox" name="q4" value="4F"> 4F</label>
+            <label><input type="checkbox" name="q4" value="2G"> 2G</label>
+            <label><input type="checkbox" name="q4" value="7B"> 7B</label>
+            <label><input type="checkbox" name="q4" value="19"> 19</label>
+          </div>
+        </div>
+
+        <div class="task1__section qa-block" id="block-checkbox-extra">
+            <div class="qa-question">7) Які літери можуть бути частиною шістнадцяткового числа? (Обери всі, що підходять)</div>
+            <div class="qa-options">
+                <label><input type="checkbox" name="q7" value="C"> C</label>
+                <label><input type="checkbox" name="q7" value="G"> G</label>
+                <label><input type="checkbox" name="q7" value="E"> E</label>
+                <label><input type="checkbox" name="q7" value="Z"> Z</label>
+            </div>
+        </div>
+        <div class="task1__section qa-block" id="block-match">
+          <h2 class="task1__subtitle">Співстав відповідність (4×4)</h2>
+          <p class="task1__text" style="font-size:20px; margin: 0 0 12px;">
+            Вибери по одній клітинці в кожному рядку, щоб співставити елемент із правильною системою.
+          </p>
+
+          <div class="match" role="group" aria-label="4×4 grid matching">
+            <div class="match__grid" id="matchGrid">
+              <div class="match__cell match__cell--head">Елемент</div>
+              <div class="match__cell match__cell--head">ASCII</div>
+              <div class="match__cell match__cell--head">Binary</div>
+              <div class="match__cell match__cell--head">Hex</div>
+              <div class="match__cell match__cell--head">Dec</div>
+
+              <div class="match__cell match__cell--rowhead">A</div>
+              <div class="match__cell"><button class="match__btn" data-row="0" data-col="0">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="0" data-col="1">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="0" data-col="2">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="0" data-col="3">●</button></div>
+
+              <div class="match__cell match__cell--rowhead">01000001</div>
+              <div class="match__cell"><button class="match__btn" data-row="1" data-col="0">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="1" data-col="1">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="1" data-col="2">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="1" data-col="3">●</button></div>
+
+              <div class="match__cell match__cell--rowhead">0x41</div>
+              <div class="match__cell"><button class="match__btn" data-row="2" data-col="0">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="2" data-col="1">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="2" data-col="2">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="2" data-col="3">●</button></div>
+
+              <div class="match__cell match__cell--rowhead">65</div>
+              <div class="match__cell"><button class="match__btn" data-row="3" data-col="0">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="3" data-col="1">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="3" data-col="2">●</button></div>
+              <div class="match__cell"><button class="match__btn" data-row="3" data-col="3">●</button></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="quiz__nav">
+          <a class="header__btn-link" href="quiz3.html" role="button">
+            <button type="button" class="header__btn header__btn--outline">Назад</button>
+          </a>
+
+          <a class="header__btn-link" href="quiz5.html" role="button">
+            <button type="button" class="header__btn">Далі</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" aria-label="Підвал сайту">
+    <div class="container footer__wrap">
+      <h2 class="footer__title">Знання. Навички. Майбутнє.</h2>
+      <p class="footer__lead">
+        Пройди тест і отримай нові цифрові навички у простій ігровій формі.
+      </p>
+      <hr class="footer__rule" />
+      <div class="footer__bottom">
+        <img class="footer__logo" src="assets/img/black-logo.svg" alt="Code Quest" />
+        <p class="footer__copy">© 2025 Code Quest. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const STORAGE_KEY = 'cq_quiz4_state';
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return {
+        radios: {},
+        checkboxes: {},
+        match: [null, null, null, null]
+      };
+      const parsed = JSON.parse(raw);
+      return {
+        radios: parsed.radios || {},
+        checkboxes: parsed.checkboxes || {},
+        match: Array.isArray(parsed.match) ? parsed.match : [null, null, null, null]
+      };
+    } catch {
+      return {
+        radios: {},
+        checkboxes: {},
+        match: [null, null, null, null]
+      };
+    }
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  let state = loadState();
+
+  // --- Header: подставляем имя/класс из localStorage ---
+  const rawProfile = localStorage.getItem('cq_registration');
+  let profile = null;
+  try { profile = rawProfile ? JSON.parse(rawProfile) : null; } catch {}
+
+  if (!profile || !profile.name || !profile.klass) {
+    window.location.href = 'registration.html';
+    return;
+  }
+  const t = document.getElementById('student-title');
+  const c = document.getElementById('student-class');
+  if (t) t.textContent = profile.name;
+  if (c) c.textContent = profile.klass;
+
+  const changeBtn = document.getElementById('changeBtn');
+  if (changeBtn) {
+    changeBtn.addEventListener('click', () => {
+      window.location.href = 'registration.html#edit';
+    });
+  }
+
+  // ------------------------------------------------------------------
+  //  РАДІО-ПИТАННЯ (q1, q2, q3, q5, q6) — збереження та відновлення
+  // ------------------------------------------------------------------
+  const radioInputs = Array.from(
+    document.querySelectorAll('input[type="radio"][name^="q"]')
+  );
+
+  function restoreRadios() {
+    radioInputs.forEach(r => {
+      const name = r.name;
+      const savedVal = state.radios[name];
+      if (savedVal !== undefined && r.value === String(savedVal)) {
+        r.checked = true;
+      }
+    });
+  }
+
+  radioInputs.forEach(r => {
+    r.addEventListener('change', () => {
+      if (r.checked) {
+        state.radios[r.name] = r.value;
+        saveState();
+      }
+    });
+  });
+
+  // ------------------------------------------------------------------
+  //  ЧЕКБОКСИ (q4, q7) — кілька правильних
+  // ------------------------------------------------------------------
+  const checkboxInputs = Array.from(
+    document.querySelectorAll('input[type="checkbox"][name^="q"]')
+  );
+
+  function restoreCheckboxes() {
+    checkboxInputs.forEach(ch => {
+      const name = ch.name;
+      const savedArr = state.checkboxes[name];
+      if (Array.isArray(savedArr) && savedArr.includes(ch.value)) {
+        ch.checked = true;
+      } else {
+        // якщо в стані немає — лишаємо за замовчуванням (скоріш за все false)
+      }
+    });
+  }
+
+  function updateCheckboxStateForName(name) {
+    const group = checkboxInputs.filter(ch => ch.name === name);
+    const selectedValues = group
+      .filter(ch => ch.checked)
+      .map(ch => ch.value);
+    state.checkboxes[name] = selectedValues;
+    saveState();
+  }
+
+  checkboxInputs.forEach(ch => {
+    ch.addEventListener('change', () => {
+      updateCheckboxStateForName(ch.name);
+    });
+  });
+
+  // ------------------------------------------------------------------
+  //  4×4 MATCH GRID — вибір по одній клітинці в рядку
+  // ------------------------------------------------------------------
+  const grid = document.getElementById('matchGrid');
+  const buttons = grid ? Array.from(grid.querySelectorAll('.match__btn')) : [];
+  const selectedByRow = [null, null, null, null];
+
+  function restoreMatch() {
+    if (!buttons.length) return;
+    state.match.forEach((colIndex, rowIndex) => {
+      if (colIndex === null || colIndex === undefined) return;
+      const btn = buttons.find(
+        b =>
+          Number(b.dataset.row) === rowIndex &&
+          Number(b.dataset.col) === colIndex
+      );
+      if (btn) {
+        btn.classList.add('is-selected');
+        selectedByRow[rowIndex] = colIndex;
+      }
+    });
+  }
+
+  if (grid) {
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.match__btn');
+      if (!btn) return;
+
+      const r = Number(btn.dataset.row);
+      const c = Number(btn.dataset.col);
+
+      // Зняти вибір у рядку
+      buttons
+        .filter(b => Number(b.dataset.row) === r)
+        .forEach(b => b.classList.remove('is-selected', 'is-correct', 'is-wrong'));
+
+      // Активувати поточну
+      btn.classList.add('is-selected');
+      selectedByRow[r] = c;
+
+      // Оновити стан і зберегти
+      state.match[r] = c;
+      saveState();
+    });
+  }
+
+  // ------------------------------------------------------------------
+  //  ВІДНОВЛЕННЯ УСІХ ВІДПОВІДЕЙ ПРИ ЗАВАНТАЖЕННІ СТОРІНКИ
+  // ------------------------------------------------------------------
+  restoreRadios();
+  restoreCheckboxes();
+  restoreMatch();
+});
+</script>
+
+
+</body>
+</html>

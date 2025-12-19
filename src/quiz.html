@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CODE — Почати</title>
+  <meta name="description" content="Початок тесту Code Quest." />
+  <link rel="icon" href="../public/favicon.ico" type="image/x-icon">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<!-- Використовуємо той самий скоуп, щоб зберегти компактний хедер і hero -->
+<body class="page--registration">
+  <!-- Header -->
+  <header class="header masthead">
+    <div class="container">
+      <div class="header__shell">
+        <div class="header__inner"> 
+          <a class="header__logo" href="index.html">
+            <img src="assets/img/logo.svg" alt="CODE Logo">
+          </a>
+
+          <nav class="header__nav" aria-label="Головна навігація">
+            <ul class="header__menu">
+              <li class="header__item"><a class="header__link" href="index.html">Головна</a></li>
+              <li class="header__item"><a class="header__link header__link--active" href="quiz.html">Почати</a></li>
+              <li class="header__item"><a class="header__link" href="about.html">Про тест</a></li>
+            </ul>
+          </nav>
+
+          <div class="header__actions" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div class="hero hero--registration">
+        <div class="hero__inner grid-reg">
+          <!-- Ліва картка з даними учня -->
+          <section class="reg-card" aria-labelledby="student-title">
+            <h1 class="reg-card__title" id="student-title"></h1>
+            <p class="reg-card__lead">Клас: <span id="student-class"></span></p>
+
+            <button id="changeBtn" class="reg-submit" type="button">Змінити</button>
+          </section>
+
+          <!-- Права ілюстрація -->
+          <div class="reg-visual" aria-hidden="true">
+            <img src="assets/img/registration-hero.png" alt="">
+          </div>
+        </div>
+      </div>
+      <!-- /Hero -->
+    </div>
+  </header>
+
+  <!-- Task 1 Section -->
+  <section class="task1">
+    <div class="container">
+      <!-- Progress bar -->
+      <div class="task1__progress">
+        <div class="progress-bar">
+          <div class="progress-bar__step progress-bar__step--active"></div>
+          <div class="progress-bar__step"></div>
+          <div class="progress-bar__step"></div>
+          <div class="progress-bar__step"></div>
+          <div class="progress-bar__step"></div>
+        </div>
+      </div>
+      <!-- Question card -->
+      <div class="task1__card">
+        <h1 class="task1__title">Шифрування за допомогою ASCII</h1>
+        
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Мета</h2>
+          <p class="task1__text">За допомогою ASCII-кодів розшифрувати слово.</p>
+        </div>
+
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Завдання</h2>
+          <p class="task1__text">Отримати закодоване слово у вигляді ASCII-кодів <span class="task1__highlight">у шістнадцятковому коді.</span></p>
+        </div>
+
+          <div class="task1__content-row">
+            <!-- Ліва частина: приклад -->
+            <div class="task1__example">
+              <div class="hex-example">
+                <div class="hex-example__pairs">
+                  <div class="hex-pair">
+                    <div class="hex-pair__hex">43</div>
+                    <div class="hex-pair__arrow">
+                      <svg width="80" height="2" viewBox="0 0 80 2" fill="none">
+                        <line x1="0" y1="1" x2="80" y2="1" stroke="white" stroke-width="2"/>
+                      </svg>
+                    </div>
+                    <div class="hex-pair__letter">C</div>
+                  </div>
+                  <div class="hex-pair">
+                    <div class="hex-pair__hex">41</div>
+                    <div class="hex-pair__arrow">
+                      <svg width="80" height="2" viewBox="0 0 80 2" fill="none">
+                        <line x1="0" y1="1" x2="80" y2="1" stroke="white" stroke-width="2"/>
+                      </svg>
+                    </div>
+                    <div class="hex-pair__letter">A</div>
+                  </div>
+                  <div class="hex-pair">
+                    <div class="hex-pair__hex">54</div>
+                    <div class="hex-pair__arrow">
+                      <svg width="80" height="2" viewBox="0 0 80 2" fill="none">
+                        <line x1="0" y1="1" x2="80" y2="1" stroke="white" stroke-width="2"/>
+                      </svg>
+                    </div>
+                    <div class="hex-pair__letter">T</div>
+                  </div>
+                </div>
+                <div class="hex-example__result">
+                  <div class="hex-example__word">CAT</div>
+                  <div class="hex-example__codes">43 41 54 <span>(hex)</span></div>
+                </div>
+              </div>
+            </div>
+          <div class="task1__tables">
+          <!-- Велика таблиця (A-Z) -->
+          <div class="ascii-table">
+            <div class="ascii-table__header">
+              <div class="ascii-table__cell--head">Binary</div>
+              <div class="ascii-table__cell--head">Dec</div>
+              <div class="ascii-table__cell--head">Hex</div>
+              <div class="ascii-table__cell--head">Графічне</div>
+            </div>
+                <div class="ascii-table__body">
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 0001</div>
+                    <div class="ascii-table__cell">65</div>
+                    <div class="ascii-table__cell">41</div>
+                    <div class="ascii-table__cell">A</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 0010</div>
+                    <div class="ascii-table__cell">66</div>
+                    <div class="ascii-table__cell">42</div>
+                    <div class="ascii-table__cell">B</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 0011</div>
+                    <div class="ascii-table__cell">67</div>
+                    <div class="ascii-table__cell">43</div>
+                    <div class="ascii-table__cell">C</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 0100</div>
+                    <div class="ascii-table__cell">68</div>
+                    <div class="ascii-table__cell">44</div>
+                    <div class="ascii-table__cell">D</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 0101</div>
+                    <div class="ascii-table__cell">69</div>
+                    <div class="ascii-table__cell">45</div>
+                    <div class="ascii-table__cell">E</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 0110</div>
+                    <div class="ascii-table__cell">70</div>
+                    <div class="ascii-table__cell">46</div>
+                    <div class="ascii-table__cell">F</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 0111</div>
+                    <div class="ascii-table__cell">71</div>
+                    <div class="ascii-table__cell">47</div>
+                    <div class="ascii-table__cell">G</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 1000</div>
+                    <div class="ascii-table__cell">72</div>
+                    <div class="ascii-table__cell">48</div>
+                    <div class="ascii-table__cell">H</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 1001</div>
+                    <div class="ascii-table__cell">73</div>
+                    <div class="ascii-table__cell">49</div>
+                    <div class="ascii-table__cell">I</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 1010</div>
+                    <div class="ascii-table__cell">74</div>
+                    <div class="ascii-table__cell">4A</div>
+                    <div class="ascii-table__cell">J</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 1011</div>
+                    <div class="ascii-table__cell">75</div>
+                    <div class="ascii-table__cell">4B</div>
+                    <div class="ascii-table__cell">K</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 1100</div>
+                    <div class="ascii-table__cell">76</div>
+                    <div class="ascii-table__cell">4C</div>
+                    <div class="ascii-table__cell">L</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 1101</div>
+                    <div class="ascii-table__cell">77</div>
+                    <div class="ascii-table__cell">4D</div>
+                    <div class="ascii-table__cell">M</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 1110</div>
+                    <div class="ascii-table__cell">78</div>
+                    <div class="ascii-table__cell">4E</div>
+                    <div class="ascii-table__cell">N</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0100 1111</div>
+                    <div class="ascii-table__cell">79</div>
+                    <div class="ascii-table__cell">4F</div>
+                    <div class="ascii-table__cell">O</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 0000</div>
+                    <div class="ascii-table__cell">80</div>
+                    <div class="ascii-table__cell">50</div>
+                    <div class="ascii-table__cell">P</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 0001</div>
+                    <div class="ascii-table__cell">81</div>
+                    <div class="ascii-table__cell">51</div>
+                    <div class="ascii-table__cell">Q</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 0010</div>
+                    <div class="ascii-table__cell">82</div>
+                    <div class="ascii-table__cell">52</div>
+                    <div class="ascii-table__cell">R</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 0011</div>
+                    <div class="ascii-table__cell">83</div>
+                    <div class="ascii-table__cell">53</div>
+                    <div class="ascii-table__cell">S</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 0100</div>
+                    <div class="ascii-table__cell">84</div>
+                    <div class="ascii-table__cell">54</div>
+                    <div class="ascii-table__cell">T</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 0101</div>
+                    <div class="ascii-table__cell">85</div>
+                    <div class="ascii-table__cell">55</div>
+                    <div class="ascii-table__cell">U</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 0110</div>
+                    <div class="ascii-table__cell">86</div>
+                    <div class="ascii-table__cell">56</div>
+                    <div class="ascii-table__cell">V</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 0111</div>
+                    <div class="ascii-table__cell">87</div>
+                    <div class="ascii-table__cell">57</div>
+                    <div class="ascii-table__cell">W</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 1000</div>
+                    <div class="ascii-table__cell">88</div>
+                    <div class="ascii-table__cell">58</div>
+                    <div class="ascii-table__cell">X</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 1001</div>
+                    <div class="ascii-table__cell">89</div>
+                    <div class="ascii-table__cell">59</div>
+                    <div class="ascii-table__cell">Y</div>
+                  </div>
+                  <div class="ascii-table__row">
+                    <div class="ascii-table__cell">0101 1010</div>
+                    <div class="ascii-table__cell">90</div>
+                    <div class="ascii-table__cell">5A</div>
+                    <div class="ascii-table__cell">Z</div>
+                  </div>
+                </div>
+              </div>
+            <!-- Мала таблиця (a-z) -->
+            <div class="ascii-table">
+              <div class="ascii-table__header">
+                <div class="ascii-table__cell--head">Binary</div>
+                <div class="ascii-table__cell--head">Dec</div>
+                <div class="ascii-table__cell--head">Hex</div>
+                <div class="ascii-table__cell--head">Графічне</div>
+              </div>
+              <div class="ascii-table__body">
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 0001</div>
+                  <div class="ascii-table__cell">97</div>
+                  <div class="ascii-table__cell">61</div>
+                  <div class="ascii-table__cell">a</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 0010</div>
+                  <div class="ascii-table__cell">98</div>
+                  <div class="ascii-table__cell">62</div>
+                  <div class="ascii-table__cell">b</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 0011</div>
+                  <div class="ascii-table__cell">99</div>
+                  <div class="ascii-table__cell">63</div>
+                  <div class="ascii-table__cell">c</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 0100</div>
+                  <div class="ascii-table__cell">100</div>
+                  <div class="ascii-table__cell">64</div>
+                  <div class="ascii-table__cell">d</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 0101</div>
+                  <div class="ascii-table__cell">101</div>
+                  <div class="ascii-table__cell">65</div>
+                  <div class="ascii-table__cell">e</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 0110</div>
+                  <div class="ascii-table__cell">102</div>
+                  <div class="ascii-table__cell">66</div>
+                  <div class="ascii-table__cell">f</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 0111</div>
+                  <div class="ascii-table__cell">103</div>
+                  <div class="ascii-table__cell">67</div>
+                  <div class="ascii-table__cell">g</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 1000</div>
+                  <div class="ascii-table__cell">104</div>
+                  <div class="ascii-table__cell">68</div>
+                  <div class="ascii-table__cell">h</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 1001</div>
+                  <div class="ascii-table__cell">105</div>
+                  <div class="ascii-table__cell">69</div>
+                  <div class="ascii-table__cell">i</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 1010</div>
+                  <div class="ascii-table__cell">106</div>
+                  <div class="ascii-table__cell">6A</div>
+                  <div class="ascii-table__cell">j</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 1011</div>
+                  <div class="ascii-table__cell">107</div>
+                  <div class="ascii-table__cell">6B</div>
+                  <div class="ascii-table__cell">k</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 1100</div>
+                  <div class="ascii-table__cell">108</div>
+                  <div class="ascii-table__cell">6C</div>
+                  <div class="ascii-table__cell">l</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 1101</div>
+                  <div class="ascii-table__cell">109</div>
+                  <div class="ascii-table__cell">6D</div>
+                  <div class="ascii-table__cell">m</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 1110</div>
+                  <div class="ascii-table__cell">110</div>
+                  <div class="ascii-table__cell">6E</div>
+                  <div class="ascii-table__cell">n</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0110 1111</div>
+                  <div class="ascii-table__cell">111</div>
+                  <div class="ascii-table__cell">6F</div>
+                  <div class="ascii-table__cell">o</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 0000</div>
+                  <div class="ascii-table__cell">112</div>
+                  <div class="ascii-table__cell">70</div>
+                  <div class="ascii-table__cell">p</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 0001</div>
+                  <div class="ascii-table__cell">113</div>
+                  <div class="ascii-table__cell">71</div>
+                  <div class="ascii-table__cell">q</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 0010</div>
+                  <div class="ascii-table__cell">114</div>
+                  <div class="ascii-table__cell">72</div>
+                  <div class="ascii-table__cell">r</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 0011</div>
+                  <div class="ascii-table__cell">115</div>
+                  <div class="ascii-table__cell">73</div>
+                  <div class="ascii-table__cell">s</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 0100</div>
+                  <div class="ascii-table__cell">116</div>
+                  <div class="ascii-table__cell">74</div>
+                  <div class="ascii-table__cell">t</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 0101</div>
+                  <div class="ascii-table__cell">117</div>
+                  <div class="ascii-table__cell">75</div>
+                  <div class="ascii-table__cell">u</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 0110</div>
+                  <div class="ascii-table__cell">118</div>
+                  <div class="ascii-table__cell">76</div>
+                  <div class="ascii-table__cell">v</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 0111</div>
+                  <div class="ascii-table__cell">119</div>
+                  <div class="ascii-table__cell">77</div>
+                  <div class="ascii-table__cell">w</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 1000</div>
+                  <div class="ascii-table__cell">120</div>
+                  <div class="ascii-table__cell">78</div>
+                  <div class="ascii-table__cell">x</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 1001</div>
+                  <div class="ascii-table__cell">121</div>
+                  <div class="ascii-table__cell">79</div>
+                  <div class="ascii-table__cell">y</div>
+                </div>
+                <div class="ascii-table__row">
+                  <div class="ascii-table__cell">0111 1010</div>
+                  <div class="ascii-table__cell">122</div>
+                  <div class="ascii-table__cell">7A</div>
+                  <div class="ascii-table__cell">z</div>
+                </div>
+              </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="task1__section">
+          <h2 class="task1__subtitle">Гра: розкодуй слова</h2>
+          <p class="task1__text">Слова закодоване у шістнадцятковому форматі</p>
+            <div class="task1__inputs">
+              <!-- Група 1: BINARY -->
+              <div class="hex-input">
+                <div class="hex-input__codes">
+                  <span class="hex-input__code">42</span>
+                  <span class="hex-input__code">49</span>
+                  <span class="hex-input__code">4E</span>
+                  <span class="hex-input__code">41</span>
+                  <span class="hex-input__code">52</span>
+                  <span class="hex-input__code">59</span>
+                </div>
+                <div class="hex-input__fields">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="B">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="I">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="N">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="A">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="R">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="Y">
+                </div>
+              </div>
+
+              <!-- Група 2: HELLO -->
+              <div class="hex-input">
+                <div class="hex-input__codes">
+                  <span class="hex-input__code">48</span>
+                  <span class="hex-input__code">45</span>
+                  <span class="hex-input__code">4C</span>
+                  <span class="hex-input__code">4C</span>
+                  <span class="hex-input__code">4F</span>
+                </div>
+                <div class="hex-input__fields">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="H">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="E">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="L">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="L">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="O">
+                </div>
+              </div>
+
+              <!-- Група 3: CODE -->
+              <div class="hex-input">
+                <div class="hex-input__codes">
+                  <span class="hex-input__code">43</span>
+                  <span class="hex-input__code">4F</span>
+                  <span class="hex-input__code">44</span>
+                  <span class="hex-input__code">45</span>
+                </div>
+                <div class="hex-input__fields">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="C">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="O">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="D">
+                  <input type="text" class="hex-input__field" maxlength="1" data-answer="E">
+                </div>
+              </div>
+
+              <!-- Додайте інші групи аналогічно -->
+            </div>
+        </div>
+        <div class="quiz__nav">
+          <a class="header__btn-link" href="quiz2.html" role="button">
+            <button type="button" class="header__btn">Далі</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Footer -->
+  <footer class="footer" aria-label="Підвал сайту">
+    <div class="container footer__wrap">
+      <h2 class="footer__title">Знання. Навички. Майбутнє.</h2>
+      <p class="footer__lead">
+        Пройди тест і отримай нові цифрові навички у простій ігровій формі. Твій перший крок до майбутнього вже тут — почни зараз і наприкінці отримай свій іменний PDF-сертифікат.
+      </p>
+      <hr class="footer__rule" />
+      <div class="footer__bottom">
+        <img class="footer__logo" src="assets/img/black-logo.svg" alt="Code Quest" />
+        <p class="footer__copy">© 2025 Code Quest. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- (далі підуть ваші блоки прогресу/завдань) -->
+
+<script>
+  // -----------------------------------------------------------------
+  //  КЛЮЧ ДЛЯ ЗБЕРЕЖЕННЯ ВІДПОВІДЕЙ ПО ЦІЙ СТОРІНЦІ
+  // -----------------------------------------------------------------
+  const ASCII_QUIZ_STORAGE_KEY = 'cq_quiz1_ascii_inputs';
+
+  // Хелпер: перевірка одного інпуту + підсвітка
+  function validateHexInput(input) {
+    const value = (input.value || '').trim().toUpperCase();
+    input.value = value;
+
+    const correct = (input.dataset.answer || '').toUpperCase();
+
+    if (!value) {
+      input.style.borderBottomColor = '#fff';
+      return;
+    }
+
+    if (value === correct) {
+      input.style.borderBottomColor = '#4CAF50'; // зелений
+    } else {
+      input.style.borderBottomColor = '#FF5252'; // червоний
+    }
+  }
+
+  // Зберегти ВСІ значення інпутів цієї сторінки
+  function saveAllHexInputs() {
+    const allInputs = document.querySelectorAll('.hex-input__field');
+    const values = Array.from(allInputs).map((inp) => inp.value || '');
+    localStorage.setItem(ASCII_QUIZ_STORAGE_KEY, JSON.stringify(values));
+  }
+
+  // Відновити ВСІ значення інпутів при завантаженні сторінки
+  function restoreAllHexInputs() {
+    const allInputs = document.querySelectorAll('.hex-input__field');
+    const raw = localStorage.getItem(ASCII_QUIZ_STORAGE_KEY);
+    if (!raw) return;
+
+    let values;
+    try {
+      values = JSON.parse(raw);
+    } catch (e) {
+      return;
+    }
+    if (!Array.isArray(values)) return;
+
+    allInputs.forEach((input, index) => {
+      const val = values[index] || '';
+      input.value = val;
+      // одразу підсвічуємо, чи правильна буква
+      validateHexInput(input);
+    });
+  }
+
+  // -----------------------------------------------------------------
+  //  НОВИЙ КОД ДЛЯ ПЕРЕВІРКИ ЗАВДАННЯ
+  // -----------------------------------------------------------------
+
+  // ВАЖЛИВО: спочатку відновлюємо значення з localStorage,
+  // а потім навішуємо обробники
+  document.addEventListener('DOMContentLoaded', () => {
+    // -----------------------------------------------------------------
+    //  ВІДНОВЛЕННЯ ВВЕДЕНИХ РАНІШЕ ВІДПОВІДЕЙ
+    // -----------------------------------------------------------------
+    restoreAllHexInputs();
+
+    // Знаходимо всі окремі групи слів (.hex-input)
+    const wordGroups = document.querySelectorAll('.hex-input');
+
+    // Обходимо кожну групу окремо
+    wordGroups.forEach(group => {
+      // Знаходимо всі поля вводу (.hex-input__field) ТІЛЬКИ для цієї групи
+      const inputs = group.querySelectorAll('.hex-input__field');
+
+      inputs.forEach((input, index) => {
+        // Обробник для ВВЕДЕННЯ ЛІТЕРИ
+        input.addEventListener('input', (e) => {
+          const target = e.target;
+
+          // 1. Валідація та підсвітка
+          validateHexInput(target);
+
+          // 2. Автоматичний перехід до наступного поля в групі
+          if (target.value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+
+          // 3. Зберігаємо всі інпути після кожної зміни
+          saveAllHexInputs();
+        });
+
+        // Обробник для Backspace (повернення до попереднього поля)
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
+      });
+    });
+
+    // -----------------------------------------------------------------
+    //  ВАШ КОД ДЛЯ РОБОТИ З LOCALSTORAGE (дані учня)
+    // -----------------------------------------------------------------
+
+    // 1) Дістаємо дані з localStorage
+    const saved = localStorage.getItem('cq_registration');
+    let data = null;
+    try { data = saved ? JSON.parse(saved) : null; } catch (_) {}
+
+    // 2) Якщо даних немає — повертаємо на реєстрацію
+    if (!data || !data.name || !data.klass) {
+      window.location.href = 'registration.html';
+    } else {
+      // 3) Підставляємо у картку
+      document.getElementById('student-title').textContent = data.name;
+      document.getElementById('student-class').textContent = data.klass;
+    }
+
+    // 4) «Змінити» — йдемо на форму
+    document.getElementById('changeBtn').addEventListener('click', () => {
+      window.location.href = 'registration.html#edit';
+    });
+  });
+</script>
+
+</body>
+</html>
